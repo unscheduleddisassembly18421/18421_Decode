@@ -40,7 +40,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Drawing;
-import org.firstinspires.ftc.teamcode.Intake;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 /*

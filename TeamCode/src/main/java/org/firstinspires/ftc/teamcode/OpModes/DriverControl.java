@@ -68,7 +68,6 @@ public class DriverControl extends OpMode {
 
   boolean shooterToggle = false;
 
-  boolean lidToggle = false;
   /**
    * This method will be called once, when the INIT button is pressed.
    */
@@ -127,9 +126,6 @@ public class DriverControl extends OpMode {
      shooterToggle = ! shooterToggle;
     }
 
-    if (g1.xWasPressed()){
-      lidToggle = ! lidToggle;
-    }
 
     //Intake
     if (intakeToggle){
@@ -145,13 +141,6 @@ public class DriverControl extends OpMode {
     }
     else{
       intake.launcherMotorOff();
-    }
-
-    if (lidToggle){
-      intake.lidServoOpen();
-    }
-    else{
-      intake.lidServoClosed();
     }
 
 

@@ -16,33 +16,29 @@ public class Intake {
     //Hardware
     private DcMotor intakeMotor = null;
     private DcMotorEx launcherMotor = null;
-    private Servo lidServo = null;
-    private DcMotor conveyorMotor = null;
+    private Servo shooterServo = null;
 
 
     //Positions
-    public static double LIDSERVO_CLOSED_POSITION = 0;
-    public static double LIDSERVO_OPEN_POSITION = 0.5;
+    public static double SHOOTERSERVO_START_POSITION = 0;
+    public static double SHOOTERSERVO_FIRING_POSITION = 0.25;
     public static double LAUNCHERMOTOR_VELOCITY_ON = 9000;
     public static double INTAKEMOTOR_POWER_ON = 0.5;
-    public static double CONVEYORMOROR_POWER_ON = 0.5;
 
 
     //Constructor
     public Intake(HardwareMap hwmap, Telemetry telemetry) {
         this.telemetry = telemetry;
-        lidServo = hwmap.get(Servo.class, "ls");
+        shooterServo = hwmap.get(Servo.class, "ss");
         launcherMotor = hwmap.get(DcMotorEx.class, "lm");
         intakeMotor = hwmap.get(DcMotor.class, "im");
-        conveyorMotor = hwmap.get(DcMotor.class, "cm");
 
 
-        lidServo.setDirection(Servo.Direction.FORWARD);
+        shooterServo.setDirection(Servo.Direction.FORWARD);
         launcherMotor.setDirection(DcMotor.Direction.FORWARD);
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
-        conveyorMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        lidServo.setPosition(LIDSERVO_CLOSED_POSITION);
+        shooterServo.setPosition(SHOOTERSERVO_START_POSITION);
 
         launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -50,16 +46,15 @@ public class Intake {
 
         launcherMotorOff();
         intakeMotorOff();
-        setConveyorMotorOff();
     }
 
-    public void lidServoOpen(){
-
-        lidServo.setPosition(LIDSERVO_OPEN_POSITION);
+    //commands
+    public void shooterServoFire(){
+        shooterServo.setPosition(SHOOTERSERVO_FIRING_POSITION);
     }
 
-    public void lidServoClosed(){
-        lidServo.setPosition(LIDSERVO_CLOSED_POSITION);
+    public void shooterServoOpen(){
+        shooterServo.setPosition(SHOOTERSERVO_START_POSITION);
     }
 
     public void launcherMotorOn(){
@@ -78,12 +73,5 @@ public class Intake {
         intakeMotor.setPower(0);
     }
 
-    public void conveyorMotorOn(){
-        conveyorMotor.setPower(CONVEYORMOROR_POWER_ON);
-    }
-
-    public void setConveyorMotorOff(){
-        conveyorMotor.setPower(0);
-    }
 
 }

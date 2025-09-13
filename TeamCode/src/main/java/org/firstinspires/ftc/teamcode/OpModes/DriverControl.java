@@ -57,6 +57,7 @@ public class DriverControl extends OpMode {
 
   MecanumDrive drive = null;
   Intake intake = null;
+  outake outake = null;
 
   Gamepad g1 = new Gamepad();
   Gamepad g2 = new Gamepad();
@@ -76,6 +77,7 @@ public class DriverControl extends OpMode {
     telemetry.addData("Status", "Initialized");
     drive = new MecanumDrive(hardwareMap, BlueWallRight);
     intake = new Intake(hardwareMap, telemetry);
+    outake = new outake(hardwareMap, telemetry);
   }
 
   /**
@@ -137,10 +139,10 @@ public class DriverControl extends OpMode {
 
     //Launcher flywheel
     if (shooterToggle){
-      intake.launcherMotorOn();
+      outake.launcherMotorOn();
     }
     else{
-      intake.launcherMotorOff();
+      outake.launcherMotorOff();
     }
 
 

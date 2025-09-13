@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
@@ -45,8 +44,8 @@ public class outake {
         launcherMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         launcherMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
-        //commands
 
+    //commands
     public void shooterServoFire(){
         shooterServo.setPosition(SHOOTERSERVO_FIRING_POSITION);
     }

@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
@@ -12,8 +11,6 @@ public class Intake {
 
     //Hardware
     private DcMotor intakeMotor = null;
-
-
 
     public static double INTAKEMOTOR_POWER_ON = 0.5;
     public static double INTAKEMOTOR_POWER_OFF = 0;

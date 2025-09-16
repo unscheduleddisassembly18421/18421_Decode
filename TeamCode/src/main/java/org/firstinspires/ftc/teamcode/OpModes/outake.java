@@ -20,13 +20,13 @@ public class outake {
 
     //Positions
     public static double SHOOTERSERVO_START_POSITION  = 0;
-    public static double SHOOTERSERVO_FIRING_POSITION = 0.25;
+    public static double SHOOTERSERVO_FIRING_POSITION = 0.8;
     public static double LAUNCHERMOTOR_VELOCITY_ON = 9000;
     public static double ROTATORSERVO_FIRST_POSITION = 0;
     public static double ROTATORSERVO_SECOND_POSITION = 0.4;
     public static double ROTATORSERVO_THIRD_POSITION = 0.8;
 
-
+    //constructor
     public outake(HardwareMap hwmap, Telemetry telemetry) {
         this.telemetry = telemetry;
 

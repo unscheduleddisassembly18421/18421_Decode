@@ -16,9 +16,8 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-
 @Autonomous(name="Auto Test.java")
-public final class AutoTest extends LinearOpMode {
+public final class      AutoTest extends LinearOpMode {
     private AprilTagProcessor aprilTagProcessor;
     private VisionPortal visionPortal;
     public WebcamName webcam;

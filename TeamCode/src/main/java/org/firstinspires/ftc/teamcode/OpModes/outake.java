@@ -14,7 +14,7 @@ public class outake {
     Telemetry telemetry = null;
 
     //hardware
-    private DcMotorEx launcherMotor = null;
+    private  DcMotorEx launcherMotor = null;
     private Servo shooterServo = null;
     private Servo rotatorServo = null;
 

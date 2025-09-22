@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.Camera;
@@ -23,6 +24,7 @@ public final class      AutoTest extends LinearOpMode {
     public WebcamName webcam;
 
     public enum GreenPosition {LEFT, MIDDLE, RIGHT, UNKNOWN}
+
     GreenPosition greenPosition = GreenPosition.UNKNOWN;
 
     @Override
@@ -36,7 +38,7 @@ public final class      AutoTest extends LinearOpMode {
 
         //visionPortal.resumeLiveView();
         //loops continously after init, before start
-        while(opModeInInit()){
+        while (opModeInInit()) {
             List<AprilTagDetection> currentDetections = aprilTagProcessor.getDetections();
             telemetry.addData("# AprilTags Detected", currentDetections.size());
 
@@ -54,22 +56,20 @@ public final class      AutoTest extends LinearOpMode {
                     greenPosition = GreenPosition.MIDDLE;
                 } else if (detection.id == 23) {
                     greenPosition = GreenPosition.RIGHT;
-                }
-                else{
-                    greenPosition= GreenPosition.UNKNOWN;
+                } else {
+                    greenPosition = GreenPosition.UNKNOWN;
                 }
 
             }   // end for() loop
-            telemetry.addData("green position",greenPosition);
+            telemetry.addData("green position", greenPosition);
             telemetry.update();
         }
         //this code runs as soon as you press start
-        if (greenPosition == GreenPosition.LEFT){
+        if (greenPosition == GreenPosition.LEFT) {
             //RUN AUTO CODE FOR THIS RANDOMIZATION
         }
 
     }
 
 }
-
 

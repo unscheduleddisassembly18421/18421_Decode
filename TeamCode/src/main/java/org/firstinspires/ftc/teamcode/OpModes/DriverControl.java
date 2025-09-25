@@ -58,7 +58,7 @@ public class DriverControl extends OpMode {
   MecanumDrive drive = null;
   Intake intake = null;
   outake outake = null;
-  middle middle = null;
+
 
   Gamepad g1 = new Gamepad();
   Gamepad g2 = new Gamepad();

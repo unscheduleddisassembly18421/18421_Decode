@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
-public class {
+public class middle {
     Telemetry telemetry = null;
 
     private Servo rotatorServo = null;
@@ -16,7 +16,7 @@ public class {
     public static double ROTATORSERVO_SECOND_POSITION = 0.4;
     public static double ROTATORSERVO_THIRD_POSITION = 0.8;
 
-    public outake(HardwareMap hwmap, Telemetry telemetry){
+    public middle(HardwareMap hwmap, Telemetry telemetry){
         this.telemetry = telemetry;
 
         rotatorServo = hwmap.get(Servo.class, "rs");

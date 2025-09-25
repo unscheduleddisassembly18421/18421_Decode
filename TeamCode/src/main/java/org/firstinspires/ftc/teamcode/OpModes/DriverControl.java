@@ -59,6 +59,7 @@ public class DriverControl extends OpMode {
   Intake intake = null;
   outake outake = null;
 
+
   Gamepad g1 = new Gamepad();
   Gamepad g2 = new Gamepad();
 

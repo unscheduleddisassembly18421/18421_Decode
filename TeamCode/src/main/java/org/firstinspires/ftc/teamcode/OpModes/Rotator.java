@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.OpModes;
 import android.graphics.Color;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -15,11 +17,24 @@ import java.util.Arrays;
 @Config
 public class Rotator {
     Telemetry telemetry = null;
+    double position;
+    double targetPosition = 0;
+    public static double kp = 0;
+    public static double kd = 0;
+    public static double ki = 0;
 
-    private Servo rotatorServo = null;
+    PIDController rotatorPower = new PIDController(kp,kd,ki);
+
+    private final double DEGREES_PER_VOLT = 360/3.3;
+
+    double ROTATOR_OFF = 0;
+
+    private CRServo rotatorServo = null;
     private NormalizedColorSensor intakeColorSensor = null;
     private NormalizedColorSensor rightColorSensor = null;
     private NormalizedColorSensor leftColorSensor = null;
+
+    private AnalogInput ai = null;
 
     public static double ROTATORSERVO_FIRST_POSITION = 0;
     public static double ROTATORSERVO_SECOND_POSITION = 0.75;
@@ -36,9 +51,10 @@ public class Rotator {
     public Rotator(HardwareMap hwmap, Telemetry telemetry){
         this.telemetry = telemetry;
 
-        rotatorServo = hwmap.get(Servo.class, "rs");
-
-        rotatorServo.setDirection(Servo.Direction.FORWARD); //TODO test to see if we are happy
+        rotatorServo = hwmap.get(CRServo.class, "rs");
+        ai = hwmap.get(AnalogInput.class,"ai");
+        position = getPosition();
+        rotatorServo.setDirection(CRServo.Direction.REVERSE);
 
         intakeColorSensor = hwmap.get(NormalizedColorSensor.class, "ics");
         leftColorSensor = hwmap.get(NormalizedColorSensor.class, "leftcs");
@@ -53,19 +69,7 @@ public class Rotator {
     }
 
     public void init(){
-        rotatorServo.setPosition(ROTATORSERVO_FIRST_POSITION);
-    }
-
-    public void rotatorServoFirstPosition(){
-        rotatorServo.setPosition(ROTATORSERVO_FIRST_POSITION);
-    }
-
-    public void rotatorServoSecondPosition(){
-        rotatorServo.setPosition(ROTATORSERVO_SECOND_POSITION);
-    }
-
-    public void rotatorServoThirdPosition(){
-        rotatorServo.setPosition(ROTATORSERVO_THIRD_POSITION);
+        setPower(ROTATOR_OFF);
     }
 
     public void readColorSensors(){
@@ -78,5 +82,26 @@ public class Rotator {
         telemetry.addData("HSV intake", Arrays.toString(intakeColorHSV));
         telemetry.addData("HSV left", Arrays.toString(leftColorHSV));
         telemetry.addData("HSV right", Arrays.toString(rightColorHSV));
+    }
+
+    double getPosition(){
+        return ai.getVoltage()*DEGREES_PER_VOLT;
+    }
+
+    public void setPower(double power){
+        rotatorServo.setPower(power);
+    }
+
+    public void setPosition(double angle){
+        targetPosition = angle;
+    }
+
+
+    public void update(){
+        rotatorPower.setPIDConstants(kp,kd,ki);
+        double power = rotatorPower.calculate(targetPosition,getPosition());
+        setPower(power);
+        telemetry.addData("Rotator Position",getPosition());
+        telemetry.addData("Rotator Power",power);
     }
 }

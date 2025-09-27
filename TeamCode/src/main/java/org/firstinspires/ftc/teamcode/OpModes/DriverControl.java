@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
@@ -45,7 +46,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 /*
  * Demonstrates an empty iterative OpMode
  */
-
+@Config
 @TeleOp(name = "Driver Control", group = "Concept")
 //@Disabled
 public class DriverControl extends OpMode {
@@ -72,6 +73,8 @@ public class DriverControl extends OpMode {
   boolean shooterToggle = false;
 
   boolean elavatorToggle = false;
+
+  public static double power = 0;
 
 
   @Override
@@ -131,15 +134,14 @@ public class DriverControl extends OpMode {
     }
 
     if(g1.dpad_up){
-      rotator.rotatorServoFirstPosition();
+      rotator.setPosition(120);
     }
-
-    if(g1.dpad_right){
-      rotator.rotatorServoSecondPosition();
+    if(g1.dpad_down){
+      rotator.setPosition(240);
     }
+    if(g1.dpad_left){
+      rotator.setPosition(0);
 
-    if (g1.dpad_left){
-      rotator.rotatorServoThirdPosition();
     }
 
 
@@ -168,6 +170,7 @@ public class DriverControl extends OpMode {
 
 
     drive.updatePoseEstimate();
+    rotator.update();
 
     Pose2d pose = drive.localizer.getPose();
     telemetry.addData("x", pose.position.x);

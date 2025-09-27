@@ -15,12 +15,11 @@ public class Intake {
     public static double INTAKEMOTOR_POWER_ON = 0.5;
     public static double INTAKEMOTOR_POWER_OFF = 0;
 
-
     //Constructor
     public Intake(HardwareMap hwmap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        intakeMotor = hwmap.get(DcMotor.class, "im");
+        intakeMotor = hwmap.get(DcMotor.class, "intakem");
 
         //initial directions and positions
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);

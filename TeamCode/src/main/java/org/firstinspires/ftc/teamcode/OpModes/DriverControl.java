@@ -57,8 +57,8 @@ public class DriverControl extends OpMode {
 
   MecanumDrive drive = null;
   Intake intake = null;
-  outake outake = null;
-  middle middle = null;
+  Outake outake = null;
+  Rotator rotator = null;
 
 
   Gamepad g1 = new Gamepad();
@@ -71,31 +71,27 @@ public class DriverControl extends OpMode {
 
   boolean shooterToggle = false;
 
-  /**
-   * This method will be called once, when the INIT button is pressed.
-   */
+  boolean elavatorToggle = false;
+
+
   @Override
   public void init() {
     telemetry.addData("Status", "Initialized");
     drive = new MecanumDrive(hardwareMap, BlueWallRight);
     intake = new Intake(hardwareMap, telemetry);
-    outake = new outake(hardwareMap, telemetry);
+    outake = new Outake(hardwareMap, telemetry);
+    rotator = new Rotator(hardwareMap, telemetry);
   }
 
-  /**
-   * This method will be called repeatedly during the period between when
-   * the INIT button is pressed and when the START button is pressed (or the
-   * OpMode is stopped).
-   */
   @Override
   public void init_loop() {
   }
 
-  /**
-   * This method will be called once, when the START button is pressed.
-   */
+
   @Override
   public void start() {
+    rotator.init();
+    outake.init();
     runtime.reset();
   }
 
@@ -130,6 +126,22 @@ public class DriverControl extends OpMode {
      shooterToggle = ! shooterToggle;
     }
 
+    if (g1.xWasPressed()){
+      elavatorToggle = ! elavatorToggle;
+    }
+
+    if(g1.dpad_up){
+      rotator.rotatorServoFirstPosition();
+    }
+
+    if(g1.dpad_right){
+      rotator.rotatorServoSecondPosition();
+    }
+
+    if (g1.dpad_left){
+      rotator.rotatorServoThirdPosition();
+    }
+
 
     //Intake
     if (intakeToggle){
@@ -145,6 +157,13 @@ public class DriverControl extends OpMode {
     }
     else{
       outake.launcherMotorOff();
+    }
+
+    if(elavatorToggle){
+      outake.elavatorMotorON();
+    }
+    else{
+      outake.elavatorMotorOff();
     }
 
 

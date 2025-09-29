@@ -51,6 +51,10 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 //@Disabled
 public class DriverControl extends OpMode {
 
+  public static double firstAngle = 0;
+  public static double secondAngle = 120;
+  public static double thirdAngle = 330;
+
   private ElapsedTime runtime = new ElapsedTime();
 
   Pose2d BlueWallRight = new Pose2d(-48,32,0);
@@ -73,6 +77,8 @@ public class DriverControl extends OpMode {
   boolean shooterToggle = false;
 
   boolean elavatorToggle = false;
+
+  boolean hoodToggle = false;
 
   public static double power = 0;
 
@@ -133,15 +139,18 @@ public class DriverControl extends OpMode {
       elavatorToggle = ! elavatorToggle;
     }
 
+    if(g1.yWasPressed()){
+      hoodToggle = ! hoodToggle;
+    }
+
     if(g1.dpad_up){
-      rotator.setPosition(120);
+      rotator.setPosition(firstAngle);
     }
     if(g1.dpad_down){
-      rotator.setPosition(240);
+      rotator.setPosition(secondAngle);
     }
     if(g1.dpad_left){
-      rotator.setPosition(0);
-
+      rotator.setPosition(thirdAngle);
     }
 
 
@@ -166,6 +175,13 @@ public class DriverControl extends OpMode {
     }
     else{
       outake.elavatorMotorOff();
+    }
+
+    if(hoodToggle){
+      outake.hoodServoStart();
+    }
+    else{
+      outake.hoodServoStart();
     }
 
 

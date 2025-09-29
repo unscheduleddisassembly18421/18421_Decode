@@ -21,6 +21,7 @@ public class Outake {
 
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
+    public static double HOODSERVO_SHOOT_POSITION = 0.2;
     public static double LAUNCHERMOTOR_VELOCITY_ON = 9000;
     public static double ELAVATORMOTOR_POWER_ON = 1;
 
@@ -67,6 +68,13 @@ public class Outake {
         elavatorMotor.setPower(0);
     }
 
+    public void  hoodServoStart(){
+        hoodServo.setPosition(HOODSERVO_START_POSITION);
+    }
 
+
+    public void  hoodServoShoot(){
+        hoodServo.setPosition(HOODSERVO_SHOOT_POSITION);
+    }
 
 }

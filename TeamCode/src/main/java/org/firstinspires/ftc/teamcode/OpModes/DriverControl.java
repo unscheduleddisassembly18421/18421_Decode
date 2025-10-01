@@ -53,12 +53,12 @@ public class DriverControl extends OpMode {
   //test
   public static double firstAngle = 0;
   public static double secondAngle = 120;
-  public static double thirdAngle = 330;
+  public static double thirdAngle = 320;
 
   private ElapsedTime runtime = new ElapsedTime();
 
   Pose2d BlueWallRight = new Pose2d(-48,32,0);
-  Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
+  //Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
 
   MecanumDrive drive = null;
   Intake intake = null;
@@ -164,10 +164,12 @@ public class DriverControl extends OpMode {
 
     //Launcher flywheel
     if (shooterToggle){
-      outake.launcherMotorOn();
+      outake.launcherMotor1On();
+      outake.launcherMotor2On();
     }
     else{
-      outake.launcherMotorOff();
+      outake.launcherMotor1Off();
+      outake.launcherMotor2Off();
     }
 
     if(elavatorToggle){
@@ -178,11 +180,13 @@ public class DriverControl extends OpMode {
     }
 
     if(hoodToggle){
-      outake.hoodServoStart();
+      outake.hoodServoShoot();
     }
     else{
       outake.hoodServoStart();
     }
+
+    rotator.readColorSensors();
 
 
     drive.updatePoseEstimate();

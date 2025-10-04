@@ -19,7 +19,7 @@ public class Rotator {
     Telemetry telemetry = null;
     double position;
     double targetPosition = 0;
-    public static double kp = 0;
+    public static double kp = 0.01;
     public static double kd = 0;
     public static double ki = 0;
 

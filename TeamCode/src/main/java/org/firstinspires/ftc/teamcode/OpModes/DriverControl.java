@@ -127,6 +127,9 @@ public class DriverControl extends OpMode {
     ));
 
     //NEWCODE
+    rotator.setPosition(firstAngle);
+
+
     if (g1.a && ! previousG1.a){
       intakeToggle = ! intakeToggle;
     }

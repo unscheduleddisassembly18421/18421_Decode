@@ -23,8 +23,8 @@ public class Outake {
 
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
-    public static double HOODSERVO_SHOOT_POSITION = 0.5;
-    public static double LAUNCHERMOTOR_VELOCITY_ON = 15000;
+    public static double HOODSERVO_SHOOT_POSITION = 0.45;
+    public static double LAUNCHERMOTOR_VELOCITY_ON = 0.86;
     public static double ELAVATORMOTOR_POWER_ON = 1;
 
 
@@ -46,7 +46,6 @@ public class Outake {
         hoodServo1.setPosition(HOODSERVO_START_POSITION);
 
         launcherMotor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        launcherMotor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         elavatorMotor.setPower(0);
     }
@@ -58,19 +57,19 @@ public class Outake {
 
     //commands
     public void launcherMotor1On(){
-        launcherMotor1.setVelocity(LAUNCHERMOTOR_VELOCITY_ON);
+        launcherMotor1.setPower(LAUNCHERMOTOR_VELOCITY_ON);
     }
 
     public void launcherMotor1Off(){
-        launcherMotor1.setVelocity(0);
+        launcherMotor1.setPower(0);
     }
 
     public void  launcherMotor2On(){
-        launcherMotor2.setVelocity(LAUNCHERMOTOR_VELOCITY_ON);
+        launcherMotor2.setPower(LAUNCHERMOTOR_VELOCITY_ON);
     }
 
     public void launcherMotor2Off(){
-        launcherMotor2.setVelocity(0);
+        launcherMotor2.setPower(0);
     }
 
     public void elavatorMotorON(){

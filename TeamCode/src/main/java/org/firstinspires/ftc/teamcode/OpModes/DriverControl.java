@@ -51,9 +51,12 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 //@Disabled
 public class DriverControl extends OpMode {
   //test
-  public static double firstAngle = 0;
-  public static double secondAngle = 120;
-  public static double thirdAngle = 320;
+  public static double firstAngle = 25;
+  public static double secondAngle = 145;
+  public static double thirdAngle = 264;
+  public static double firstShootingAngle = 205;
+  public static double secondShootingAngle = 332;
+  public static double thirdShootingAngle = 90;
 
   private ElapsedTime runtime = new ElapsedTime();
 
@@ -110,8 +113,8 @@ public class DriverControl extends OpMode {
    */
   @Override
   public void loop() {
-    previousG2.copy(g1);
-    previousG1.copy(g2);
+    previousG2.copy(g2);
+    previousG1.copy(g1);
     g1.copy(gamepad1);
     g2.copy(gamepad2);
 
@@ -127,7 +130,6 @@ public class DriverControl extends OpMode {
     ));
 
     //NEWCODE
-    rotator.setPosition(firstAngle);
 
 
     if (g1.a && ! previousG1.a){
@@ -187,6 +189,14 @@ public class DriverControl extends OpMode {
     }
     else{
       outake.hoodServoStart();
+    }
+
+    if(g1.right_bumper){
+      outake.launcherMotor1On();
+      outake.launcherMotor2On();
+      outake.hoodServoShoot();
+      rotator.setPosition(firstShootingAngle);
+      outake.elavatorMotorON();
     }
 
     rotator.readColorSensors();

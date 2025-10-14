@@ -28,6 +28,17 @@ public class PIDController {
     public double calculate(double reference, double current){
         double error;
         error = reference - current;
+
+        if(error > 180 ){
+            error = error-360; // or error -= 360
+        }
+        else if (error < -180){
+            error = error+360;
+        }
+        else{
+            //do nothing!
+        }
+
         double derivitave = (error - lasterror) / timer.seconds();
         integralsum += (error * timer.seconds());
         timer.reset();

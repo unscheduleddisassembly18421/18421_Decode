@@ -26,6 +26,7 @@ public class Outake {
     public static double HOODSERVO_SHOOT_POSITION = 0.45;
     public static double LAUNCHERMOTOR_VELOCITY_ON = 9000;
     public static double ELAVATORMOTOR_POWER_ON = 1;
+    public static double LAUNCHER_TOLERANCE = 0.95;
 
 
     //constructor
@@ -90,6 +91,19 @@ public class Outake {
 
     public void  hoodServoShoot(){
         hoodServo1.setPosition(HOODSERVO_SHOOT_POSITION);
+    }
+
+    public boolean launchMotorsAtVelocity(){
+        return (launcherMotor1.getVelocity() > LAUNCHER_TOLERANCE*LAUNCHERMOTOR_VELOCITY_ON) &&
+                (launcherMotor2.getVelocity() > LAUNCHER_TOLERANCE*LAUNCHERMOTOR_VELOCITY_ON );
+    }
+
+    public double getVelocity1(){
+        return (launcherMotor1.getVelocity());
+    }
+
+    public double getVelocity2(){
+        return (launcherMotor2.getVelocity());
     }
 
 }

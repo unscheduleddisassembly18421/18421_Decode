@@ -19,7 +19,7 @@ public class Rotator {
     Telemetry telemetry = null;
     double position;
     double targetPosition = 0;
-    public static double kp = 0;
+    public static double kp = 0.01;
     public static double kd = 0;
     public static double ki = 0;
 
@@ -39,9 +39,9 @@ public class Rotator {
     public static double ROTATORSERVO_FIRST_POSITION = 0;
     public static double ROTATORSERVO_SECOND_POSITION = 0.75;
     public static double ROTATORSERVO_THIRD_POSITION = 0.8;
-    float intakeGain = 2;//TODO test to see if happy with value
-    float leftGain = 2;//TODO test to see if happy with value
-    float rightGain = 2;//TODO test to see if happy with value
+    float intakeGain = 2;
+    float leftGain = 2;
+    float rightGain = 2;
 
     float[] intakeColorHSV = new float[3];
     float[] rightColorHSV = new float[3];

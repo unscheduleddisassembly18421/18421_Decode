@@ -50,11 +50,20 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 @TeleOp(name = "Driver Control", group = "Concept")
 //@Disabled
 public class DriverControl extends OpMode {
+  //test
+  public static double firstAngle = 25;
+  public static double secondAngle = 145;
+  public static double thirdAngle = 264;
+  public static double firstShootingAngle = 205;
+  public static double secondShootingAngle = 332;
+  public static double thirdShootingAngle = 90;
+
+  public static double SHOOTER_DELAY = 250;
 
   private ElapsedTime runtime = new ElapsedTime();
 
   Pose2d BlueWallRight = new Pose2d(-48,32,0);
-  Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
+  //Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
 
   MecanumDrive drive = null;
   Intake intake = null;
@@ -74,7 +83,17 @@ public class DriverControl extends OpMode {
 
   boolean elavatorToggle = false;
 
+  boolean hoodToggle = false;
+
   public static double power = 0;
+
+  public enum ShooterState {
+    READY, FIRE1, FIRE2, FIRE3, RELOAD
+  }
+
+  ShooterState shooterState = ShooterState.READY;
+
+  public ElapsedTime shooterClock = new ElapsedTime();
 
 
   @Override
@@ -96,6 +115,7 @@ public class DriverControl extends OpMode {
     rotator.init();
     outake.init();
     runtime.reset();
+    shooterClock.reset();
   }
 
   /**
@@ -104,8 +124,8 @@ public class DriverControl extends OpMode {
    */
   @Override
   public void loop() {
-    previousG2.copy(g1);
-    previousG1.copy(g2);
+    previousG2.copy(g2);
+    previousG1.copy(g1);
     g1.copy(gamepad1);
     g2.copy(gamepad2);
 
@@ -121,6 +141,8 @@ public class DriverControl extends OpMode {
     ));
 
     //NEWCODE
+
+
     if (g1.a && ! previousG1.a){
       intakeToggle = ! intakeToggle;
     }
@@ -133,15 +155,18 @@ public class DriverControl extends OpMode {
       elavatorToggle = ! elavatorToggle;
     }
 
+    if(g1.yWasPressed()){
+      hoodToggle = ! hoodToggle;
+    }
+
     if(g1.dpad_up){
-      rotator.setPosition(120);
+      rotator.setPosition(firstAngle);
     }
     if(g1.dpad_down){
-      rotator.setPosition(240);
+      rotator.setPosition(secondAngle);
     }
     if(g1.dpad_left){
-      rotator.setPosition(0);
-
+      rotator.setPosition(thirdAngle);
     }
 
 
@@ -155,10 +180,12 @@ public class DriverControl extends OpMode {
 
     //Launcher flywheel
     if (shooterToggle){
-      outake.launcherMotorOn();
+      outake.launcherMotor1On();
+      outake.launcherMotor2On();
     }
     else{
-      outake.launcherMotorOff();
+      outake.launcherMotor1Off();
+      outake.launcherMotor2Off();
     }
 
     if(elavatorToggle){
@@ -168,6 +195,81 @@ public class DriverControl extends OpMode {
       outake.elavatorMotorOff();
     }
 
+    if(hoodToggle){
+      outake.hoodServoShoot();
+    }
+    else{
+      outake.hoodServoStart();
+    }
+
+
+
+    switch(shooterState) {
+      case READY:
+        if (gamepad1.rightBumperWasPressed()) {
+          outake.launcherMotor2On();
+          outake.launcherMotor1On();
+          outake.hoodServoShoot();
+          outake.elavatorMotorON();
+          rotator.setPosition(firstAngle);
+          shooterState = ShooterState.FIRE1;
+        }
+        break;
+
+      case FIRE1:
+
+        if (outake.launchMotorsAtVelocity()) {
+          rotator.setPosition(firstShootingAngle);
+          outake.elavatorMotorON();
+          shooterClock.reset();
+          shooterState = ShooterState.FIRE2;
+        }
+        break;
+
+      case FIRE2:
+        if (!outake.launchMotorsAtVelocity()) {
+          outake.elavatorMotorOff();
+        }
+
+        if (outake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
+          rotator.setPosition(secondShootingAngle);
+          outake.elavatorMotorON();
+          shooterClock.reset();
+          shooterState = ShooterState.FIRE3;
+        }
+        break;
+
+      case FIRE3:
+
+        if (!outake.launchMotorsAtVelocity()) {
+          outake.elavatorMotorOff();
+        }
+
+        if (outake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
+          rotator.setPosition(thirdShootingAngle);
+          outake.elavatorMotorON();
+          shooterClock.reset();
+          shooterState = ShooterState.RELOAD;
+        }
+          break;
+
+          case RELOAD:
+            if (!outake.launchMotorsAtVelocity()) {
+              outake.elavatorMotorOff();
+              outake.launcherMotor1Off();
+              outake.launcherMotor2Off();
+              outake.hoodServoStart();
+              rotator.setPosition(firstAngle);
+            }
+            break;
+        }
+
+
+
+
+
+    rotator.readColorSensors();
+
 
     drive.updatePoseEstimate();
     rotator.update();
@@ -176,6 +278,10 @@ public class DriverControl extends OpMode {
     telemetry.addData("x", pose.position.x);
     telemetry.addData("y", pose.position.y);
     telemetry.addData("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
+    telemetry.addData("shooter state", shooterState);
+    telemetry.addData("motors at velocity", outake.launchMotorsAtVelocity());
+    telemetry.addData("launcher1 motors velocity", outake.getVelocity1());
+    telemetry.addData("launcher2 motors velocity", outake.getVelocity2());
     telemetry.update();
 
     TelemetryPacket packet = new TelemetryPacket();

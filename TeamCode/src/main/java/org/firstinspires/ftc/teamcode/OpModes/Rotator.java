@@ -5,12 +5,14 @@ import android.graphics.Color;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Arrays;
 
@@ -22,6 +24,8 @@ public class Rotator {
     public static double kp = 0.005;
     public static double kd = 0;
     public static double ki = 0;
+
+    public static double intakeTolerance = 6;
 
     PIDController rotatorPower = new PIDController(kp,kd,ki);
 
@@ -73,6 +77,7 @@ public class Rotator {
     }
 
     public void readColorSensors(){
+        double intakeDistance = ((DistanceSensor) intakeColorSensor).getDistance(DistanceUnit.CM);
         NormalizedRGBA intakeColor = intakeColorSensor.getNormalizedColors();
         NormalizedRGBA rightColor = rightColorSensor.getNormalizedColors();
         NormalizedRGBA leftColor = leftColorSensor.getNormalizedColors();
@@ -82,6 +87,11 @@ public class Rotator {
         telemetry.addData("HSV intake", Arrays.toString(intakeColorHSV));
         telemetry.addData("HSV left", Arrays.toString(leftColorHSV));
         telemetry.addData("HSV right", Arrays.toString(rightColorHSV));
+        telemetry.addData("intake distance", intakeDistance);
+    }
+
+    public boolean detectedBall(){
+        return ((DistanceSensor) intakeColorSensor).getDistance(DistanceUnit.CM) < intakeTolerance;
     }
 
     double getPosition(){
@@ -95,6 +105,8 @@ public class Rotator {
     public void setPosition(double angle){
         targetPosition = angle;
     }
+
+
 
 
     public void update(){

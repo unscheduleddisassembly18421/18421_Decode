@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 
-public class Outake {
+public class Outtake {
 
     Telemetry telemetry = null;
 
@@ -24,13 +24,13 @@ public class Outake {
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
     public static double HOODSERVO_SHOOT_POSITION = 0.45;
-    public static double LAUNCHERMOTOR_VELOCITY_ON = 9000;
+    public static double LAUNCHERMOTOR_VELOCITY_ON = 1675;
     public static double ELAVATORMOTOR_POWER_ON = 1;
     public static double LAUNCHER_TOLERANCE = 0.95;
 
 
     //constructor
-    public Outake(HardwareMap hwmap, Telemetry telemetry) {
+    public Outtake(HardwareMap hwmap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
         hoodServo1 = hwmap.get(Servo.class, "hs1 ");

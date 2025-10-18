@@ -20,7 +20,7 @@ import java.util.List;
 
 @Config
 @Autonomous(name="Auto Test.java")
-public final class      AutoTest extends LinearOpMode {
+public final class AutoTest extends LinearOpMode {
     private AprilTagProcessor aprilTagProcessor;
     private VisionPortal visionPortal;
     public WebcamName webcam;
@@ -62,7 +62,7 @@ public final class      AutoTest extends LinearOpMode {
                     greenPosition = GreenPosition.UNKNOWN;
                 }
 
-            }   // end for() loop
+            }
             telemetry.addData("green position", greenPosition);
             telemetry.update();
         }
@@ -74,4 +74,5 @@ public final class      AutoTest extends LinearOpMode {
     }
 
 }
+
 

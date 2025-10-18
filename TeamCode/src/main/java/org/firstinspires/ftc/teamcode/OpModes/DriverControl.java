@@ -65,7 +65,11 @@ public class DriverControl extends OpMode {
 
   public static double INTAKE_DELAY = 510;
 
+  public static double WIGGLE_DELAY = 100;
+
   private ElapsedTime runtime = new ElapsedTime();
+
+  private ElapsedTime wiggletime = new ElapsedTime();
 
   Pose2d BlueWallRight = new Pose2d(-48,32,0);
   //Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
@@ -216,7 +220,7 @@ public class DriverControl extends OpMode {
     //}
 
 
-
+    //TODO figur eout why doesnt work if pressed with intake
     switch(shooterState) {
       case READY:
 
@@ -300,7 +304,6 @@ public class DriverControl extends OpMode {
         if(intakeClock.milliseconds() > INTAKE_DELAY && rotator.detectedBall()){
           intakeClock.reset();
           intakeState = IntakeState.INTAKE2;
-
         }
 
         break;
@@ -325,7 +328,24 @@ public class DriverControl extends OpMode {
       case FIRING:
         if (shooterState == ShooterState.RELOAD){
           intakeState = IntakeState.READY;
+          //TODO doesn't work. Figure out why
+
+          if(g1.xWasPressed()){
+            wiggletime.reset();
+            rotator.setPosition(thirdAngle-10);
+            if(wiggletime.milliseconds() > WIGGLE_DELAY){
+              rotator.setPosition(thirdAngle+10);
+              wiggletime.reset();
+            }
+            if(wiggletime.milliseconds() > WIGGLE_DELAY){
+              rotator.setPosition(thirdAngle);
+              wiggletime.reset();
+
+            }
+          }
         }
+
+
         break;
 
 

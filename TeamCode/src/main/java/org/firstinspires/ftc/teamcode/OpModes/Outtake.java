@@ -24,7 +24,7 @@ public class Outtake {
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
     public static double HOODSERVO_SHOOT_POSITION = 0.543;
-    public static double LAUNCHERMOTOR_VELOCITY_ON = 1665;//max is around 2500
+    public static double LAUNCHERMOTOR_VELOCITY_ON = 1640;//max is around 2500
     public static double ELAVATORMOTOR_POWER_ON = 1;
     public static double LAUNCHER_TOLERANCE = 0.975;
 

@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 
 @Config
-@Autonomous(name= "Auto ")
+@Autonomous(name= "Automonous")
 public class Automonous extends LinearOpMode {
     public enum AutoSelector {TBD}
     public AutoSelector autoSelector = AutoSelector.TBD; // hi
@@ -34,21 +34,29 @@ public class Automonous extends LinearOpMode {
         }
 
         //Make the trajectories here
-        TrajectoryActionBuilder redStartToShootingPosition = drive.actionBuilder(redStartFar)//firstAuto
-            .setTangent(Math.toRadians(180))
-            .splineToLinearHeading(new Pose2d(38, 30,Math.toRadians(90)),Math.toRadians(90))
-            .splineToLinearHeading(new Pose2d(36, 35, Math.toRadians(180)), Math.toRadians(270))
-            .endTrajectory();
-
-        TrajectoryActionBuilder redFarShootingPositionToSomething = redStartToShootingPosition.fresh();
-
-
+        TrajectoryActionBuilder redStartToShootingPosition = drive.actionBuilder(redStartFar)//firstpath
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(38, 35,Math.toRadians(90)),Math.toRadians(90))
+                .lineToY(55)
+                .setTangent(Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(337.6)),Math.toRadians(337.6))
+                .endTrajectory();
 
 
+        TrajectoryActionBuilder redFarShootingPositionToSomething = redStartToShootingPosition.fresh()//secondpath
+                .setTangent(Math.toRadians(180))
+                .splineToLinearHeading(new Pose2d(13, 35,Math.toRadians(90)),Math.toRadians(90))
+                .lineToY(50)
+                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(157.6)),Math.toRadians(157.6))
+                .endTrajectory();
 
 
-
-
+        TrajectoryActionBuilder redFarShootingPositionToSomethingtwo = redStartToShootingPosition.fresh()//thirdpath
+                .splineToLinearHeading(new Pose2d(-10, 38,Math.toRadians(90)),Math.toRadians(90))
+                .lineToY(55)
+                .setTangent(Math.toRadians(315))
+                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(90)),Math.toRadians(335))
+                .endTrajectory();
 
 
 
@@ -61,7 +69,11 @@ public class Automonous extends LinearOpMode {
         Action RedMoveToShooting = redStartToShootingPosition.build();
         Action RedFarShootingPosition = redFarShootingPositionToSomething.build();
 
+        //Action *NameOfPath* = nameOfPath.build();
 
+        Action firstpath = redStartToShootingPosition.build();
+        Action secondpath = redFarShootingPositionToSomething.build();
+        Action thirdpath = redFarShootingPositionToSomethingtwo.build();
 
 
 
@@ -78,6 +90,9 @@ public class Automonous extends LinearOpMode {
                         new SleepAction(5)
 
                 )
+
+
+
         );
     }
 

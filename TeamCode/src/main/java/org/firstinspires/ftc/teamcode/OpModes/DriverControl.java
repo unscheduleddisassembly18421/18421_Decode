@@ -63,7 +63,8 @@ public class DriverControl extends OpMode {
   public static double SHOOTER_DELAY = 500;
   public static double RELOAD_DELAY = 1000;
 
-  public static double INTAKE_DELAY = 510;
+  public static double INTAKE_DELAY = 310;
+  public static double INTAKE_OFF_DELAY = 600;
 
   public static double WIGGLE_DELAY = 100;
 
@@ -220,7 +221,7 @@ public class DriverControl extends OpMode {
     //}
 
 
-    //TODO figur eout why doesnt work if pressed with intake
+    //TODO figure out why doesn't work if pressed with intake and why intake doesn't work if preloaded with one ball
     switch(shooterState) {
       case READY:
 
@@ -317,7 +318,7 @@ public class DriverControl extends OpMode {
         break;
 
       case FULL:
-        if(intakeClock.milliseconds() > INTAKE_DELAY) {
+        if(intakeClock.milliseconds() > INTAKE_OFF_DELAY) {
           intake.intakeMotorOff();
           shooterState = ShooterState.READY;
           intakeState = IntakeState.FIRING;
@@ -328,21 +329,6 @@ public class DriverControl extends OpMode {
       case FIRING:
         if (shooterState == ShooterState.RELOAD){
           intakeState = IntakeState.READY;
-          //TODO doesn't work. Figure out why
-
-          if(g1.xWasPressed()){
-            wiggletime.reset();
-            rotator.setPosition(thirdAngle-10);
-            if(wiggletime.milliseconds() > WIGGLE_DELAY){
-              rotator.setPosition(thirdAngle+10);
-              wiggletime.reset();
-            }
-            if(wiggletime.milliseconds() > WIGGLE_DELAY){
-              rotator.setPosition(thirdAngle);
-              wiggletime.reset();
-
-            }
-          }
         }
 
 

@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.OpModes.DriverControl;
 import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 
 @Config
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 public class Automonous extends LinearOpMode {
     public enum AutoSelector {TBD}
     public AutoSelector autoSelector = AutoSelector.TBD; // hi
+    DriverControl r;
     @Override
     public void runOpMode() throws InterruptedException {
         Pose2d beginPose = new Pose2d(0, 0, 0);
@@ -27,6 +29,7 @@ public class Automonous extends LinearOpMode {
 
 
         Pose2d redStartFar = new Pose2d(63, 12, Math.toRadians(180));
+        r.drive.localizer.setPose(redStartFar);
 
 
         while (opModeInInit()){
@@ -34,7 +37,7 @@ public class Automonous extends LinearOpMode {
         }
 
         //Make the trajectories here
-        TrajectoryActionBuilder redStartToShootingPosition = drive.actionBuilder(redStartFar)//firstpath
+        TrajectoryActionBuilder redStartToShootingPosition = r.drive.actionBuilder(redStartFar)//firstpath
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(38, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)

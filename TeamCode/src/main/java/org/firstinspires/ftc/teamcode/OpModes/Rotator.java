@@ -43,7 +43,7 @@ public class Rotator {
     public static double ROTATORSERVO_FIRST_POSITION = 0;
     public static double ROTATORSERVO_SECOND_POSITION = 0.75;
     public static double ROTATORSERVO_THIRD_POSITION = 0.8;
-    float intakeGain = 2;
+    float intakeGain = 4;
     float leftGain = 2;
     float rightGain = 2;
 
@@ -92,6 +92,12 @@ public class Rotator {
 
     public boolean detectedBall(){
         return ((DistanceSensor) intakeColorSensor).getDistance(DistanceUnit.CM) < intakeTolerance;
+    }
+
+    public float ballColorDetected() {
+        NormalizedRGBA intakeColor = intakeColorSensor.getNormalizedColors();
+        Color.colorToHSV(intakeColor.toColor(), intakeColorHSV);
+        return (intakeColorHSV[0]);
     }
 
     double getPosition(){

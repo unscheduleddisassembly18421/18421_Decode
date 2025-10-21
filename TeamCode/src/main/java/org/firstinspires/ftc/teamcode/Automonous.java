@@ -12,6 +12,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.OpModes.DriverControl;
 import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
@@ -21,12 +22,12 @@ import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 public class Automonous extends LinearOpMode {
     public enum AutoSelector {TBD}
     public AutoSelector autoSelector = AutoSelector.TBD; // hi
-    DriverControl r;
+    public HwRobot r = null;
     @Override
     public void runOpMode() throws InterruptedException {
         //Pose2d beginPose = new Pose2d(0, 0, 0);
         //MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
-        r = new DriverControl();
+        r = new HwRobot(telemetry,hardwareMap);
         r.init();
 
 

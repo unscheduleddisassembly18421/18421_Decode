@@ -29,6 +29,17 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import static org.firstinspires.ftc.teamcode.Variables.INTAKE_DELAY;
+import static org.firstinspires.ftc.teamcode.Variables.INTAKE_OFF_DELAY;
+import static org.firstinspires.ftc.teamcode.Variables.RELOAD_DELAY;
+import static org.firstinspires.ftc.teamcode.Variables.SHOOTER_DELAY;
+import static org.firstinspires.ftc.teamcode.Variables.firstAngle;
+import static org.firstinspires.ftc.teamcode.Variables.firstShootingAngle;
+import static org.firstinspires.ftc.teamcode.Variables.secondAngle;
+import static org.firstinspires.ftc.teamcode.Variables.secondShootingAngle;
+import static org.firstinspires.ftc.teamcode.Variables.thirdAngle;
+import static org.firstinspires.ftc.teamcode.Variables.thirdShootingAngle;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -44,6 +55,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Drawing;
+import org.firstinspires.ftc.teamcode.HwRobot;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 /*
@@ -54,34 +66,14 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 //@Disabled
 public class DriverControl extends OpMode {
   //test
-  public static double firstAngle = 25;
-  public static double secondAngle = 145;
-  public static double thirdAngle = 267;
-  public static double firstShootingAngle = 205;
-  public static double secondShootingAngle = 332;
-  public static double thirdShootingAngle = 90;
-  public static double indexingAngle = 107;
-
-  public static double SHOOTER_DELAY = 500;
-  public static double RELOAD_DELAY = 1000;
-
-  public static double INTAKE_DELAY = 310;
-  public static double INTAKE_OFF_DELAY = 600;
-
-  public static double WIGGLE_DELAY = 100;
-  public MecanumDrive drive;
-  Telemetry telemetry;
-
+  public HwRobot r = null;
   private ElapsedTime runtime = new ElapsedTime();
-
   private ElapsedTime wiggletime = new ElapsedTime();
 
-  Pose2d BlueWallRight = new Pose2d(0,0,0);
+
   //Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
 
-  Intake intake = null;
-  Outtake outtake = null;
-  Rotator rotator = null;
+
 
 
   Gamepad g1 = new Gamepad();
@@ -108,8 +100,13 @@ public class DriverControl extends OpMode {
     READY, INTAKE1, INTAKE2, FULL, FIRING
   }
 
+  public enum GreenPosition{
+    RIGHT, MIDDLE, LEFT
+  }
+
   ShooterState shooterState = ShooterState.READY;
   IntakeState intakeState = IntakeState.READY;
+  GreenPosition greenPosition;
 
   public ElapsedTime shooterClock = new ElapsedTime();
   public ElapsedTime intakeClock = new ElapsedTime();
@@ -117,23 +114,31 @@ public class DriverControl extends OpMode {
 
   @Override
   public void init() {
-    telemetry.addData("Status", "Initialized");
+    r = new HwRobot(telemetry, hardwareMap);
+    r.init();
     telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-    drive = new MecanumDrive(hardwareMap, BlueWallRight);
-    intake = new Intake(hardwareMap, telemetry);
-    outtake = new Outtake(hardwareMap, telemetry);
-    rotator = new Rotator(hardwareMap, telemetry);
+    telemetry.addData("Status", "Initialized");
+
   }
 
   @Override
   public void init_loop() {
+    if(gamepad1.dpad_left){
+      greenPosition = GreenPosition.LEFT;
+    }
+    if(gamepad1.dpad_right){
+      greenPosition = GreenPosition.RIGHT;
+    }
+    if(gamepad1.dpad_down){
+      greenPosition = GreenPosition.MIDDLE;
+    }
+    telemetry.addData("green position", greenPosition);
   }
 
 
   @Override
   public void start() {
-    rotator.init();
-    outtake.init();
+
     runtime.reset();
     shooterClock.reset();
     intakeClock.reset();
@@ -153,7 +158,7 @@ public class DriverControl extends OpMode {
 
     telemetry.addData("Status", "Run Time: " + runtime.toString());
 
-    drive.setDrivePowers(new PoseVelocity2d(
+    r.drive.setDrivePowers(new PoseVelocity2d(
             new Vector2d(
                     -gamepad1.left_stick_y,
                     -gamepad1.left_stick_x
@@ -181,13 +186,13 @@ public class DriverControl extends OpMode {
     }
 
     if(g1.dpad_up){
-      rotator.setPosition(firstAngle);
+      r.rotator.setPosition(firstAngle);
     }
     if(g1.dpad_down){
-      rotator.setPosition(secondAngle);
+      r.rotator.setPosition(secondAngle);
     }
     if(g1.dpad_left){
-      rotator.setPosition(thirdAngle);
+      r.rotator.setPosition(thirdAngle);
     }
 
 
@@ -231,10 +236,10 @@ public class DriverControl extends OpMode {
         //outtake.elavatorMotorOff();
 
         if (gamepad1.rightBumperWasPressed()) {
-          outtake.launcherMotor2On();
-          outtake.launcherMotor1On();
-          outtake.hoodServoShoot();
-          outtake.elavatorMotorON();
+          r.outtake.launcherMotor2On();
+          r.outtake.launcherMotor1On();
+          r.outtake.hoodServoShoot();
+          r.outtake.elavatorMotorON();
           //rotator.setPosition(firstAngle);
           shooterState = ShooterState.FIRE1;
         }
@@ -242,9 +247,9 @@ public class DriverControl extends OpMode {
 
       case FIRE1:
 
-        if (outtake.launchMotorsAtVelocity()) {
-          rotator.setPosition(firstShootingAngle);
-          outtake.elavatorMotorON();
+        if (r.outtake.launchMotorsAtVelocity()) {
+          r.rotator.setPosition(firstShootingAngle);
+          r.outtake.elavatorMotorON();
           shooterClock.reset();
           shooterState = ShooterState.FIRE2;
         }
@@ -255,8 +260,8 @@ public class DriverControl extends OpMode {
           //outtake.elavatorMotorOff();
         //}
 
-        if (outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
-          rotator.setPosition(secondShootingAngle);
+        if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
+          r.rotator.setPosition(secondShootingAngle);
           //outtake.elavatorMotorON();
           shooterClock.reset();
           shooterState = ShooterState.FIRE3;
@@ -269,8 +274,8 @@ public class DriverControl extends OpMode {
           //outtake.elavatorMotorOff();
         //}
 
-        if (outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
-          rotator.setPosition(thirdShootingAngle);
+        if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
+          r.rotator.setPosition(thirdShootingAngle);
           //outtake.elavatorMotorON();
           shooterClock.reset();
           shooterState = ShooterState.RELOAD;
@@ -278,12 +283,12 @@ public class DriverControl extends OpMode {
           break;
 
           case RELOAD:
-            if (outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > RELOAD_DELAY) {
-              outtake.elavatorMotorOff();
-              outtake.launcherMotor1Off();
-              outtake.launcherMotor2Off();
-              outtake.hoodServoStart();
-              rotator.setPosition(firstAngle);
+            if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > RELOAD_DELAY) {
+              r.outtake.elavatorMotorOff();
+              r.outtake.launcherMotor1Off();
+              r.outtake.launcherMotor2Off();
+              r.outtake.hoodServoStart();
+              r.rotator.setPosition(firstAngle);
               intakeState = IntakeState.READY;
               shooterState = ShooterState.READY;
             }
@@ -294,18 +299,18 @@ public class DriverControl extends OpMode {
     switch (intakeState){
       case READY:
         if(g1.leftBumperWasPressed()){
-          rotator.setPosition(firstAngle);
-          intake.intakeMotorOn();
+          r.rotator.setPosition(firstAngle);
+          r.intake.intakeMotorOn();
         }
 
-        if(rotator.detectedBall()){
+        if(r.rotator.detectedBall()){
           intakeState = IntakeState.INTAKE1;
           intakeClock.reset();
         }
         break;
       case INTAKE1:
-        rotator.setPosition(secondAngle);
-        if(intakeClock.milliseconds() > INTAKE_DELAY && rotator.detectedBall()){
+        r.rotator.setPosition(secondAngle);
+        if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
           intakeClock.reset();
           intakeState = IntakeState.INTAKE2;
         }
@@ -313,8 +318,8 @@ public class DriverControl extends OpMode {
         break;
 
       case INTAKE2:
-        rotator.setPosition(thirdAngle);
-        if(intakeClock.milliseconds() > INTAKE_DELAY && rotator.detectedBall()){
+        r.rotator.setPosition(thirdAngle);
+        if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
           intakeClock.reset();
           intakeState = IntakeState.FULL;
         }
@@ -322,7 +327,7 @@ public class DriverControl extends OpMode {
 
       case FULL:
         if(intakeClock.milliseconds() > INTAKE_OFF_DELAY) {
-          intake.intakeMotorOff();
+          r.intake.intakeMotorOff();
           shooterState = ShooterState.READY;
           intakeState = IntakeState.FIRING;
         }
@@ -341,22 +346,23 @@ public class DriverControl extends OpMode {
     }
 
 
-    rotator.readColorSensors();
+    r.rotator.readColorSensors();
 
 
-    drive.updatePoseEstimate();
-    rotator.update();
+    r.drive.updatePoseEstimate();
+    r.rotator.update();
 
-    Pose2d pose = drive.localizer.getPose();
+    Pose2d pose = r.drive.localizer.getPose();
     telemetry.addData("x", pose.position.x);
     telemetry.addData("y", pose.position.y);
     telemetry.addData("heading (deg)", Math.toDegrees(pose.heading.toDouble()));
     telemetry.addData("shooter state", shooterState);
     telemetry.addData("intake state", intakeState);
-    telemetry.addData("motors at velocity", outtake.launchMotorsAtVelocity());
-    telemetry.addData("launcher1 motors velocity", outtake.getVelocity1());
-    telemetry.addData("launcher2 motors velocity", outtake.getVelocity2());
-    telemetry.addData("ball detected", rotator.detectedBall());
+    telemetry.addData("motors at velocity", r.outtake.launchMotorsAtVelocity());
+    telemetry.addData("launcher1 motors velocity", r.outtake.getVelocity1());
+    telemetry.addData("launcher2 motors velocity", r.outtake.getVelocity2());
+    telemetry.addData("ball detected", r.rotator.detectedBall());
+    telemetry.addData("green Position", greenPosition);
     telemetry.update();
 
     TelemetryPacket packet = new TelemetryPacket();

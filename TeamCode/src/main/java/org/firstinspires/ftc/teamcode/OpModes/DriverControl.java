@@ -67,16 +67,15 @@ public class DriverControl extends OpMode {
   public static double INTAKE_OFF_DELAY = 600;
 
   public static double WIGGLE_DELAY = 100;
-  public MecanumDrive drive;
+  public MecanumDrive drive = null;
 
   private ElapsedTime runtime = new ElapsedTime();
 
   private ElapsedTime wiggletime = new ElapsedTime();
 
-  Pose2d BlueWallRight = new Pose2d(-48,32,0);
+  Pose2d BlueWallRight = new Pose2d(0,0,0);
   //Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
 
-  //MecanumDrive drive = null;
   Intake intake = null;
   Outtake outtake = null;
   Rotator rotator = null;

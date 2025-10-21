@@ -24,8 +24,8 @@ public class Automonous extends LinearOpMode {
     DriverControl r;
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d beginPose = new Pose2d(0, 0, 0);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+        //Pose2d beginPose = new Pose2d(0, 0, 0);
+        //MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
 
 
         Pose2d redStartFar = new Pose2d(63, 12, Math.toRadians(180));
@@ -60,9 +60,7 @@ public class Automonous extends LinearOpMode {
                 .setTangent(Math.toRadians(315))
                 .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(90)),Math.toRadians(335))
                 .endTrajectory();
-
-
-
+        //TrajectoryActionBuilder redFarShootingPositionToSomethingthree =
 
 
 
@@ -72,12 +70,13 @@ public class Automonous extends LinearOpMode {
         Action RedMoveToShooting = redStartToShootingPosition.build();
         Action RedFarShootingPosition = redFarShootingPositionToSomething.build();
 
+
         //Action *NameOfPath* = nameOfPath.build();
 
         Action firstpath = redStartToShootingPosition.build();
         Action secondpath = redFarShootingPositionToSomething.build();
         Action thirdpath = redFarShootingPositionToSomethingtwo.build();
-
+        //Action fourthpath =
 
 
 

@@ -253,6 +253,7 @@ public final class MecanumDrive {
         localizer = new PinpointLocalizer(hardwareMap, PARAMS.inPerTick, pose);
 
         FlightRecorder.write("MECANUM_PARAMS", PARAMS);
+
     }
 
     public void setDrivePowers(PoseVelocity2d powers) {

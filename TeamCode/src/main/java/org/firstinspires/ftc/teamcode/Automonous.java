@@ -26,6 +26,8 @@ public class Automonous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         //Pose2d beginPose = new Pose2d(0, 0, 0);
         //MecanumDrive drive = new MecanumDrive(hardwareMap, beginPose);
+        r = new DriverControl();
+        r.init();
 
 
         Pose2d redStartFar = new Pose2d(63, 12, Math.toRadians(180));

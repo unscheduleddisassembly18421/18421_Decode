@@ -39,8 +39,10 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 
@@ -67,7 +69,8 @@ public class DriverControl extends OpMode {
   public static double INTAKE_OFF_DELAY = 600;
 
   public static double WIGGLE_DELAY = 100;
-  public MecanumDrive drive = null;
+  public MecanumDrive drive;
+  Telemetry telemetry;
 
   private ElapsedTime runtime = new ElapsedTime();
 

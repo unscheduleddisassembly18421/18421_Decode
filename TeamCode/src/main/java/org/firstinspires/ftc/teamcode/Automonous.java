@@ -38,6 +38,7 @@ public class Automonous extends LinearOpMode {
         while (opModeInInit()){
 
         }
+        //john is dumb
 
         //Make the trajectories here
         TrajectoryActionBuilder redStartToShootingPosition = r.drive.actionBuilder(redStartFar)//firstPath

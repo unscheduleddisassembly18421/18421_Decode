@@ -40,24 +40,24 @@ public class Automonous extends LinearOpMode {
         }
 
         //Make the trajectories here
-        TrajectoryActionBuilder redStartToShootingPosition = r.drive.actionBuilder(redStartFar)//firstpath
+        TrajectoryActionBuilder redStartToShootingPosition = r.drive.actionBuilder(redStartFar)//firstPath
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(38, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)
                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(337.6)),Math.toRadians(337.6))
+                .splineToLinearHeading(new Pose2d(55, 15,Math.toRadians(160)),Math.toRadians(160))
                 .endTrajectory();
 
 
-        TrajectoryActionBuilder redFarShootingPositionToSomething = redStartToShootingPosition.fresh()//secondpath
+        TrajectoryActionBuilder redFarShootingPositionToSomething = redStartToShootingPosition.fresh()//secondPath
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(50)
-                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(157.6)),Math.toRadians(157.6))
+                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(160)),Math.toRadians(160))
                 .endTrajectory();
 
 
-        TrajectoryActionBuilder redFarShootingPositionToSomethingtwo = redStartToShootingPosition.fresh()//thirdpath
+        TrajectoryActionBuilder redFarShootingPositionToSomethingTwo = redFarShootingPositionToSomething.fresh()//thirdPath
                 .splineToLinearHeading(new Pose2d(-10, 38,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)
                 .setTangent(Math.toRadians(315))
@@ -76,9 +76,9 @@ public class Automonous extends LinearOpMode {
 
         //Action *NameOfPath* = nameOfPath.build();
 
-        Action firstpath = redStartToShootingPosition.build();
-        Action secondpath = redFarShootingPositionToSomething.build();
-        Action thirdpath = redFarShootingPositionToSomethingtwo.build();
+        Action firstPath = redStartToShootingPosition.build();
+        Action secondPath = redFarShootingPositionToSomething.build();
+        Action thirdPath = redFarShootingPositionToSomethingTwo.build();
         //Action fourthpath =
 
 
@@ -90,8 +90,9 @@ public class Automonous extends LinearOpMode {
                 new SequentialAction(
                         RedMoveToShooting,
                         new SleepAction(5),
-                        RedFarShootingPosition,
-
+                        firstPath,
+                        secondPath,
+                        thirdPath,
                         new SleepAction(5)
 
                 )

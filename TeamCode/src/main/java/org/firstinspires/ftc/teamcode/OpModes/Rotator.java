@@ -94,12 +94,6 @@ public class Rotator {
         return ((DistanceSensor) intakeColorSensor).getDistance(DistanceUnit.CM) < intakeTolerance;
     }
 
-    public float ballColorDetected() {
-        NormalizedRGBA intakeColor = intakeColorSensor.getNormalizedColors();
-        Color.colorToHSV(intakeColor.toColor(), intakeColorHSV);
-        return (intakeColorHSV[0]);
-    }
-
     double getPosition(){
         return ai.getVoltage()*DEGREES_PER_VOLT;
     }

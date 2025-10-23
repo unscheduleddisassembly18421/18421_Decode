@@ -71,9 +71,6 @@ public class DriverControl extends OpMode {
   private ElapsedTime wiggletime = new ElapsedTime();
 
 
-  //Pose2d RightWallleft = new Pose2d(-48, -32, Math.toRadians(180));
-
-
 
 
   Gamepad g1 = new Gamepad();
@@ -233,7 +230,7 @@ public class DriverControl extends OpMode {
     switch(shooterState) {
       case READY:
 
-        //outtake.elavatorMotorOff();
+        //outtake.r.elavatorMotorOff();
 
         if (gamepad1.rightBumperWasPressed()) {
           r.outtake.launcherMotor2On();
@@ -257,12 +254,12 @@ public class DriverControl extends OpMode {
 
       case FIRE2:
         //if (!outtake.launchMotorsAtVelocity()) {
-          //outtake.elavatorMotorOff();
+          //outtake.r.elavatorMotorOff();
         //}
 
         if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
           r.rotator.setPosition(secondShootingAngle);
-          //outtake.elavatorMotorON();
+          //outtake.r.elavatorMotorON();
           shooterClock.reset();
           shooterState = ShooterState.FIRE3;
         }
@@ -271,12 +268,12 @@ public class DriverControl extends OpMode {
       case FIRE3:
 
         //if (!outtake.launchMotorsAtVelocity()) {
-          //outtake.elavatorMotorOff();
+          //outtake.r.elavatorMotorOff();
         //}
 
         if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
           r.rotator.setPosition(thirdShootingAngle);
-          //outtake.elavatorMotorON();
+          //outtake.r.elavatorMotorON();
           shooterClock.reset();
           shooterState = ShooterState.RELOAD;
         }

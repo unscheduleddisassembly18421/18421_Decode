@@ -83,7 +83,7 @@ public class DriverControl extends OpMode {
 
   boolean shooterToggle = false;
 
-  boolean elavatorToggle = false;
+  boolean elevatorToggle = false;
 
   boolean hoodToggle = false;
 
@@ -175,7 +175,7 @@ public class DriverControl extends OpMode {
     }
 
     if (g1.xWasPressed()){
-      elavatorToggle = ! elavatorToggle;
+      elevatorToggle = !   elevatorToggle;
     }
 
     if(g1.yWasPressed()){

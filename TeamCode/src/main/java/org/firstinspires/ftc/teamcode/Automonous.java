@@ -15,6 +15,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.OpModes.DriverControl;
+import org.firstinspires.ftc.teamcode.OpModes.Outtake;
 import org.firstinspires.ftc.teamcode.tuning.TuningOpModes;
 
 @Config
@@ -38,7 +39,6 @@ public class Automonous extends LinearOpMode {
         while (opModeInInit()){
 
         }
-        //john is dumb
 
         //Make the trajectories here
         TrajectoryActionBuilder redStartToShootingPosition = r.drive.actionBuilder(redStartFar)//firstPath
@@ -89,8 +89,10 @@ public class Automonous extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
+                        r.activateShooter(),
                         RedMoveToShooting,
-                        new SleepAction(5),
+                        r.checkShooterVelocity(),
+                        r.turnElavatorMotorOn(),
                         firstPath,
                         secondPath,
                         thirdPath,

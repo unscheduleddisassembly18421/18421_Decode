@@ -2,7 +2,11 @@ package org.firstinspires.ftc.teamcode.OpModes;
 
 import android.graphics.Color;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -24,6 +28,14 @@ public class Rotator {
     public static double kp = 0.005;
     public static double kd = 0;
     public static double ki = 0;
+
+
+    public static double firstAngle = 25;
+    public static double secondAngle = 145;
+    public static double thirdAngle = 267;
+    public static double firstShootingAngle = 205;
+    public static double secondShootingAngle = 332;
+    public static double thirdShootingAngle = 90;
 
     public static double intakeTolerance = 6;
 
@@ -115,5 +127,17 @@ public class Rotator {
         setPower(power);
         telemetry.addData("Rotator Position",getPosition());
         telemetry.addData("Rotator Power",power);
+    }
+
+    public class turnToFirstShootingAngle implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setPosition(firstAngle);
+            return false;
+        }
+    }
+    public Action turnToFirstShootingAngle(){
+        return new turnToFirstShootingAngle();
     }
 }

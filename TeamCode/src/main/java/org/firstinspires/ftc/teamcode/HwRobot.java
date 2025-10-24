@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -29,5 +30,22 @@ public class HwRobot {
         rotator = new Rotator(hardwareMap, telemetry);
         rotator.init();
         outtake.init();
+    }
+
+    public Action activateShooter(){
+        return outtake.activateShooter();
+    }
+
+    public Action checkShooterVelocity(){
+        return outtake.checkShooterVelocity();
+    }
+
+    public Action turnElavatorMotorOn(){
+        return outtake.turnElavatorMotorOn();
+    }
+
+
+    public Action turnToFirstShootingAngle(){
+        return rotator.turnToFirstShootingAngle();
     }
 }

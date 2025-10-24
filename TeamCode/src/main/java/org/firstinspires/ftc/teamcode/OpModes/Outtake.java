@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -106,6 +110,43 @@ public class Outtake {
 
     public double getVelocity2(){
         return (launcherMotor2.getVelocity());
+    }
+
+    public class ActivateShooter implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            launcherMotor1On();
+            launcherMotor2On();
+            return false; //if the return is false, then the action ends!  If true, it continues.
+        }
+    }
+
+    public Action activateShooter(){
+        return new ActivateShooter();
+    }
+    public class CheckShooterVelocity implements Action{
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            return !launchMotorsAtVelocity();
+        }
+    }
+    public Action checkShooterVelocity(){
+        return new CheckShooterVelocity();
+    }
+
+
+    public class TurnElavatorMotorOn implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            elavatorMotorON();
+            return false;
+        }
+    }
+    public Action turnElavatorMotorOn(){
+        return new TurnElavatorMotorOn();
     }
 
 }

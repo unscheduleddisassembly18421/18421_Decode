@@ -28,7 +28,8 @@ public class Outtake {
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
     public static double HOODSERVO_SHOOT_POSITION = 0.543;
-    public static double LAUNCHERMOTOR_VELOCITY_ON = 1640;//max is around 2500
+    public static double FAR_LAUNCHERMOTOR_VELOCITY_ON = 1640;//max is around 2500
+    public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1000;//test
     public static double ELAVATORMOTOR_POWER_ON = 1;
     public static double LAUNCHER_TOLERANCE = 0.975;
 
@@ -66,16 +67,16 @@ public class Outtake {
 
 
     //commands
-    public void launcherMotor1On(){
-        launcherMotor1.setVelocity(LAUNCHERMOTOR_VELOCITY_ON);
+    public void launcherMotor1OnFar(){
+        launcherMotor1.setVelocity(FAR_LAUNCHERMOTOR_VELOCITY_ON);
     }
 
     public void launcherMotor1Off(){
         launcherMotor1.setVelocity(0);
     }
 
-    public void  launcherMotor2On(){
-        launcherMotor2.setVelocity(LAUNCHERMOTOR_VELOCITY_ON);
+    public void  launcherMotor2OnFar(){
+        launcherMotor2.setVelocity(FAR_LAUNCHERMOTOR_VELOCITY_ON);
     }
 
     public void launcherMotor2Off(){
@@ -100,8 +101,8 @@ public class Outtake {
     }
 
     public boolean launchMotorsAtVelocity(){
-        return (launcherMotor1.getVelocity() > LAUNCHER_TOLERANCE*LAUNCHERMOTOR_VELOCITY_ON) &&
-                (launcherMotor2.getVelocity() > LAUNCHER_TOLERANCE*LAUNCHERMOTOR_VELOCITY_ON );
+        return (launcherMotor1.getVelocity() > LAUNCHER_TOLERANCE*FAR_LAUNCHERMOTOR_VELOCITY_ON) &&
+                (launcherMotor2.getVelocity() > LAUNCHER_TOLERANCE*FAR_LAUNCHERMOTOR_VELOCITY_ON );
     }
 
     public double getVelocity1(){
@@ -116,8 +117,8 @@ public class Outtake {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            launcherMotor1On();
-            launcherMotor2On();
+            launcherMotor1OnFar();
+            launcherMotor2OnFar();
             return false; //if the return is false, then the action ends!  If true, it continues.
         }
     }

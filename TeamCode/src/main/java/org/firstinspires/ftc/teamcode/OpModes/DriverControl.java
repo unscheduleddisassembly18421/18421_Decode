@@ -233,8 +233,8 @@ public class DriverControl extends OpMode {
         //outtake.r.elavatorMotorOff();
 
         if (gamepad1.rightBumperWasPressed()) {
-          r.outtake.launcherMotor2On();
-          r.outtake.launcherMotor1On();
+          r.outtake.launcherMotor2OnFar();
+          r.outtake.launcherMotor1OnFar();
           r.outtake.hoodServoShoot();
           r.outtake.elavatorMotorON();
           //rotator.setPosition(firstAngle);

@@ -166,31 +166,31 @@ public class DriverControl extends OpMode {
     //NEWCODE
 
 
-    if (g1.a && ! previousG1.a){
-      intakeToggle = ! intakeToggle;
-    }
+    //if (g1.a && ! previousG1.a){
+      //intakeToggle = ! intakeToggle;
+    //}
 
-    if (g1.bWasPressed()){
-     shooterToggle = ! shooterToggle;
-    }
+    //if (g1.bWasPressed()){
+     //shooterToggle = ! shooterToggle;
+    //}
 
-    if (g1.xWasPressed()){
-      elevatorToggle = !   elevatorToggle;
-    }
+    //if (g1.xWasPressed()){
+      //elevatorToggle = !   elevatorToggle;
+    //}
 
-    if(g1.yWasPressed()){
-      hoodToggle = ! hoodToggle;
-    }
+    //if(g1.yWasPressed()){
+      //hoodToggle = ! hoodToggle;
+    //}
 
-    if(g1.dpad_up){
-      r.rotator.setPosition(firstAngle);
-    }
-    if(g1.dpad_down){
-      r.rotator.setPosition(secondAngle);
-    }
-    if(g1.dpad_left){
-      r.rotator.setPosition(thirdAngle);
-    }
+    //if(g1.dpad_up){
+      //r.rotator.setPosition(firstAngle);
+    //}
+    //if(g1.dpad_down){
+      //r.rotator.setPosition(secondAngle);
+    //}
+    //if(g1.dpad_left){
+      //r.rotator.setPosition(thirdAngle);
+    //}
 
 
     //Intake
@@ -304,14 +304,14 @@ public class DriverControl extends OpMode {
 
       case INTAKE1:
 
-        if(r.rotator.detectedBall()){
+        if(r.rotator.detectedBall() || g1.xWasPressed()){
           intakeState = IntakeState.INTAKE2;
           intakeClock.reset();
         }
         break;
       case INTAKE2:
         r.rotator.setPosition(secondAngle);
-        if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
+        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g1.xWasPressed())){
           intakeClock.reset();
           intakeState = IntakeState.INTAKE2;
         }
@@ -320,7 +320,7 @@ public class DriverControl extends OpMode {
 
       case INTAKE3:
         r.rotator.setPosition(thirdAngle);
-        if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
+        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g1.xWasPressed())){
           intakeClock.reset();
           intakeState = IntakeState.FULL;
         }

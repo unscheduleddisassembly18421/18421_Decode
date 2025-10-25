@@ -68,7 +68,6 @@ public class DriverControl extends OpMode {
   //test
   public HwRobot r = null;
   private ElapsedTime runtime = new ElapsedTime();
-  private ElapsedTime wiggletime = new ElapsedTime();
 
 
 

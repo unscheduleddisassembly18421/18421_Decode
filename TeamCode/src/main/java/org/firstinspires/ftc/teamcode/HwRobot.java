@@ -60,4 +60,20 @@ public class HwRobot {
     public Action turnToThirdShootingAngle(){
         return rotator.turnToThirdShootingAngle();
     }
+
+    public Action turnToFirstAngle(){
+        return rotator.turnToFirstAngle();
+    }
+
+    public Action turnToSecondAngle(){
+        return rotator.turnToSecondAngle();
+    }
+
+    public Action turnToThirdAngle(){
+        return rotator.turnToThirdAngle();
+    }
+
+    public Action turnOnIntake(){
+        return intake.turnOnIntake();
+    }
 }

@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -34,6 +38,19 @@ public class Intake {
 
     public void intakeMotorOn(){
         intakeMotor.setPower(INTAKEMOTOR_POWER_ON);
+    }
+
+    public class TurnOnIntake implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            intakeMotorOn();
+            return false;
+        }
+    }
+
+    public Action turnOnIntake(){
+        return new TurnOnIntake();
     }
 
 

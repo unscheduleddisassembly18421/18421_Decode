@@ -226,7 +226,7 @@ public class DriverControl extends OpMode {
     //}
 
 
-    //TODO figure out why doesn't work if pressed with intake and why intake doesn't work if preloaded with one ball
+    //TODO figure out why doesn't work if pressed with intake
     switch(shooterState) {
       case READY:
 

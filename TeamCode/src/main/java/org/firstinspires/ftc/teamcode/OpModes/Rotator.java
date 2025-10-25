@@ -133,11 +133,35 @@ public class Rotator {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            setPosition(firstAngle);
+            setPosition(firstShootingAngle);
             return false;
         }
     }
     public Action turnToFirstShootingAngle(){
+        return new turnToFirstShootingAngle();
+    }
+
+    public class turnToSecondShootingAngle implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setPosition(secondShootingAngle);
+            return false;
+        }
+    }
+    public Action turnToSecondShootingAngle(){
+        return new turnToFirstShootingAngle();
+    }
+
+    public class turnToThirdShootingAngle implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            setPosition(thirdShootingAngle);
+            return false;
+        }
+    }
+    public Action turnToThirdShootingAngle(){
         return new turnToFirstShootingAngle();
     }
 }

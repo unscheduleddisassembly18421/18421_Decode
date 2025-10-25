@@ -48,4 +48,12 @@ public class HwRobot {
     public Action turnToFirstShootingAngle(){
         return rotator.turnToFirstShootingAngle();
     }
+
+    public Action turnToSecondShootingAngle(){
+        return rotator.turnToSecondShootingAngle();
+    }
+
+    public Action turnToThirdShootingAngle(){
+        return rotator.turnToThirdShootingAngle();
+    }
 }

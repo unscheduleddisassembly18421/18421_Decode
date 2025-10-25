@@ -94,7 +94,7 @@ public class DriverControl extends OpMode {
   }
 
   public enum IntakeState {
-    READY, INTAKE1, INTAKE2, FULL, FIRING
+    READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
   }
 
   public enum GreenPosition{
@@ -298,14 +298,18 @@ public class DriverControl extends OpMode {
         if(g1.leftBumperWasPressed()){
           r.rotator.setPosition(firstAngle);
           r.intake.intakeMotorOn();
+          intakeState = IntakeState.INTAKE1;
         }
+        break;
+
+      case INTAKE1:
 
         if(r.rotator.detectedBall()){
-          intakeState = IntakeState.INTAKE1;
+          intakeState = IntakeState.INTAKE2;
           intakeClock.reset();
         }
         break;
-      case INTAKE1:
+      case INTAKE2:
         r.rotator.setPosition(secondAngle);
         if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
           intakeClock.reset();
@@ -314,7 +318,7 @@ public class DriverControl extends OpMode {
 
         break;
 
-      case INTAKE2:
+      case INTAKE3:
         r.rotator.setPosition(thirdAngle);
         if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
           intakeClock.reset();

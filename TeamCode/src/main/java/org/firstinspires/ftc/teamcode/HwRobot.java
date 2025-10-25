@@ -76,4 +76,22 @@ public class HwRobot {
     public Action turnOnIntake(){
         return intake.turnOnIntake();
     }
+
+    //right front is in EH 0
+    //right back is in EH 1
+    //left back is in CH 0
+    //left front is in CH 1
+    //hood servo is in CH 1
+    //left indicator light is in CH 5
+    //right indicator light is in CH 4
+    //pinpoint is in I2C bus 0 CH
+    //rotater servo is in SH 0
+    //elavator motor is in EH 2
+    //intake motor is in EH 3
+    //launcher motor 1 is in CH 3
+    //launcher motor 2 is in CH 2
+    //analog input is in CH analog input 0
+    //right color sensor is in EH I2C 0
+    //left color sensor is in CH I2C
+    //intake color sensor is in CH I2C
 }

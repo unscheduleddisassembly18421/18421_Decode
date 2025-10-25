@@ -28,7 +28,7 @@ public class Outtake {
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
     public static double HOODSERVO_SHOOT_POSITION = 0.543;
-    public static double FAR_LAUNCHERMOTOR_VELOCITY_ON = 1640;//max is around 2500
+    public static double FAR_LAUNCHERMOTOR_VELOCITY_ON = 1640;//max is around 2700
     public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1000;//test
     public static double ELAVATORMOTOR_POWER_ON = 1;
     public static double LAUNCHER_TOLERANCE = 0.975;
@@ -48,7 +48,7 @@ public class Outtake {
         //hoodServo2.setDirection(Servo.Direction.REVERSE);
 
         launcherMotor1.setDirection(DcMotor.Direction.FORWARD);
-        launcherMotor1.setDirection(DcMotor.Direction.FORWARD);
+        launcherMotor2.setDirection(DcMotor.Direction.FORWARD);
         elavatorMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         hoodServo1.setPosition(HOODSERVO_START_POSITION);

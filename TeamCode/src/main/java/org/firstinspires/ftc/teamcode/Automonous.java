@@ -92,6 +92,7 @@ public class Automonous extends LinearOpMode {
                         r.activateShooter(),
                         RedMoveToShooting,
                         r.checkShooterVelocity(),
+                        r.openHoodServo(),
                         r.turnElavatorMotorOn(),
                         r.turnToFirstShootingAngle(),
                         r.turnToSecondShootingAngle(),

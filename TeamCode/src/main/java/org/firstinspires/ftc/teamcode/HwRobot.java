@@ -44,6 +44,10 @@ public class HwRobot {
         return outtake.turnElavatorMotorOn();
     }
 
+    public Action openHoodServo(){
+        return outtake.openHoodServo();
+    }
+
 
     public Action turnToFirstShootingAngle(){
         return rotator.turnToFirstShootingAngle();

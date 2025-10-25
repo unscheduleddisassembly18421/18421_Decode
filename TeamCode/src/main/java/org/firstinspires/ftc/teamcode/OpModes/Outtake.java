@@ -149,4 +149,17 @@ public class Outtake {
         return new TurnElavatorMotorOn();
     }
 
+    public class OpenHoodServo implements Action{
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hoodServoShoot();
+            return false;
+        }
+    }
+
+    public Action openHoodServo(){
+        return new OpenHoodServo();
+    }
+
 }

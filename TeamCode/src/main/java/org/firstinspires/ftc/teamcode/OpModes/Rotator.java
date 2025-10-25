@@ -50,11 +50,14 @@ public class Rotator {
     private NormalizedColorSensor rightColorSensor = null;
     private NormalizedColorSensor leftColorSensor = null;
 
+    private Servo leftLight = null;
+    private Servo rightLight = null;
+
+    public static double GREEN_COLOR = 0.5;
+    public static double RED_COLOR = 0.277;
+
     private AnalogInput ai = null;
 
-    public static double ROTATORSERVO_FIRST_POSITION = 0;
-    public static double ROTATORSERVO_SECOND_POSITION = 0.75;
-    public static double ROTATORSERVO_THIRD_POSITION = 0.8;
     float intakeGain = 4;
     float leftGain = 2;
     float rightGain = 2;
@@ -76,6 +79,12 @@ public class Rotator {
         leftColorSensor = hwmap.get(NormalizedColorSensor.class, "leftcs");
         rightColorSensor = hwmap.get(NormalizedColorSensor.class, "rightcs");
 
+        rightLight = hwmap.get(Servo.class, "rightil");
+        leftLight = hwmap.get(Servo.class, "leftil");
+
+        rightLight.setDirection(Servo.Direction.FORWARD);
+        leftLight.setDirection(Servo.Direction.FORWARD);
+
         intakeColorSensor.setGain(intakeGain);
         leftColorSensor.setGain(leftGain);
         rightColorSensor.setGain(rightGain);
@@ -88,6 +97,7 @@ public class Rotator {
         setPower(ROTATOR_OFF);
     }
 
+    //color sensor stuff
     public void readColorSensors(){
         double intakeDistance = ((DistanceSensor) intakeColorSensor).getDistance(DistanceUnit.CM);
         NormalizedRGBA intakeColor = intakeColorSensor.getNormalizedColors();
@@ -106,6 +116,7 @@ public class Rotator {
         return ((DistanceSensor) intakeColorSensor).getDistance(DistanceUnit.CM) < intakeTolerance;
     }
 
+    //PID servo stuff
     double getPosition(){
         return ai.getVoltage()*DEGREES_PER_VOLT;
     }
@@ -118,9 +129,6 @@ public class Rotator {
         targetPosition = angle;
     }
 
-
-
-
     public void update(){
         rotatorPower.setPIDConstants(kp,kd,ki);
         double power = rotatorPower.calculate(targetPosition,getPosition());
@@ -129,6 +137,25 @@ public class Rotator {
         telemetry.addData("Rotator Power",power);
     }
 
+    //indicator light stuff
+    public void leftLightGreen(){
+        leftLight.setPosition(GREEN_COLOR);
+    }
+
+    public void leftLightRed(){
+        leftLight.setPosition(RED_COLOR);
+    }
+
+    public void rightLightGreen(){
+        rightLight.setPosition(GREEN_COLOR);
+    }
+
+    public void rightLightRed(){
+        rightLight.setPosition(RED_COLOR);
+    }
+
+
+    //actions
     public class turnToFirstShootingAngle implements Action {
 
         @Override

@@ -228,9 +228,7 @@ public class DriverControl extends OpMode {
     //TODO figure out why doesn't work if pressed with intake
     switch(shooterState) {
       case READY:
-
         //outtake.r.elavatorMotorOff();
-
         if (gamepad1.rightBumperWasPressed()) {
           r.outtake.launcherMotor2OnFar();
           r.outtake.launcherMotor1OnFar();
@@ -294,6 +292,8 @@ public class DriverControl extends OpMode {
 
     switch (intakeState){
       case READY:
+        r.rotator.leftLightRed();
+        r.rotator.rightLightRed();
         if(g1.leftBumperWasPressed()){
           r.rotator.setPosition(firstAngle);
           r.intake.intakeMotorOn();
@@ -328,6 +328,8 @@ public class DriverControl extends OpMode {
       case FULL:
         if(intakeClock.milliseconds() > INTAKE_OFF_DELAY) {
           r.intake.intakeMotorOff();
+          r.rotator.leftLightGreen();
+          r.rotator.rightLightGreen();
           shooterState = ShooterState.READY;
           intakeState = IntakeState.FIRING;
         }

@@ -92,6 +92,6 @@ public class HwRobot {
     //launcher motor 2 is in CH 2
     //analog input is in CH analog input 0
     //right color sensor is in EH I2C 0
-    //left color sensor is in CH I2C
-    //intake color sensor is in CH I2C
+    //left color sensor is in CH I2C 2 as Rev v3 color sensor
+    //intake color sensor is in CH I2C 1 as color/range sensor
 }

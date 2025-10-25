@@ -85,7 +85,7 @@ public class Automonous extends LinearOpMode {
 
 
 
-        waitForStart();
+        waitForStart();//John I did it
 
         Actions.runBlocking(
                 new SequentialAction(

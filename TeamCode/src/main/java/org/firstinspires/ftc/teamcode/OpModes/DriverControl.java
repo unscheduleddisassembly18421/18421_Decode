@@ -316,14 +316,14 @@ public class DriverControl extends OpMode {
         r.rotator.setPosition(secondAngle);
         if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g1.xWasPressed())){
           intakeClock.reset();
-          intakeState = IntakeState.INTAKE2;
+          intakeState = IntakeState.INTAKE3;
         }
 
         break;
 
       case INTAKE3:
         r.rotator.setPosition(thirdAngle);
-        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g1.xWasPressed())){
+        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall()) || g1.xWasPressed()){
           intakeClock.reset();
           intakeState = IntakeState.FULL;
         }

@@ -17,7 +17,7 @@ public class Intake {
     //Hardware
     private DcMotor intakeMotor = null;
 
-    public static double INTAKEMOTOR_POWER_ON = 0.7;
+    public static double INTAKEMOTOR_POWER_ON = 0.95;
     private static double INTAKEMOTOR_POWER_OFF = 0;
 
     //Constructor

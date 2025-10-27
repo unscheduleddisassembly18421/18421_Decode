@@ -82,7 +82,7 @@ public class HwRobot {
     //left back is in CH 0 named lb
     //left front is in CH 1 named lf
     //hood servo is in CH 1 named hs1
-    //left indicator light is in CH 5 named leftil
+    //left indicator light is in CH 3 named leftil
     //right indicator light is in CH 4 named rightil
     //pinpoint is in I2C bus 0 CH named pinpoint
     //rotater servo is in SH 0 named rs

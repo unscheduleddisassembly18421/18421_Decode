@@ -48,13 +48,13 @@ public class Rotator {
     private CRServo rotatorServo = null;
     private NormalizedColorSensor intakeColorSensor = null;
     private NormalizedColorSensor rightColorSensor = null;
-    private NormalizedColorSensor leftColorSensor = null;
+    //private NormalizedColorSensor leftColorSensor = null;
 
     private Servo leftLight = null;
     private Servo rightLight = null;
 
     public static double GREEN_COLOR = 0.5;
-    public static double RED_COLOR = 0.277;
+    public static double RED_COLOR = 0.28;
 
     private AnalogInput ai = null;
 
@@ -76,7 +76,7 @@ public class Rotator {
         rotatorServo.setDirection(CRServo.Direction.REVERSE);
 
         intakeColorSensor = hwmap.get(NormalizedColorSensor.class, "ics");
-        leftColorSensor = hwmap.get(NormalizedColorSensor.class, "leftcs");
+        //leftColorSensor = hwmap.get(NormalizedColorSensor.class, "leftcs");
         rightColorSensor = hwmap.get(NormalizedColorSensor.class, "rightcs");
 
         rightLight = hwmap.get(Servo.class, "rightil");
@@ -89,7 +89,7 @@ public class Rotator {
         leftLight.setDirection(Servo.Direction.FORWARD);
 
         intakeColorSensor.setGain(intakeGain);
-        leftColorSensor.setGain(leftGain);
+        //leftColorSensor.setGain(leftGain);
         rightColorSensor.setGain(rightGain);
 
         //rotatorServo.setPosition(ROTATORSERVO_FIRST_POSITION);
@@ -105,10 +105,10 @@ public class Rotator {
         double intakeDistance = ((DistanceSensor) intakeColorSensor).getDistance(DistanceUnit.CM);
         NormalizedRGBA intakeColor = intakeColorSensor.getNormalizedColors();
         NormalizedRGBA rightColor = rightColorSensor.getNormalizedColors();
-        NormalizedRGBA leftColor = leftColorSensor.getNormalizedColors();
+        //NormalizedRGBA leftColor = leftColorSensor.getNormalizedColors();
         Color.colorToHSV(intakeColor.toColor(), intakeColorHSV);
         Color.colorToHSV(rightColor.toColor(), rightColorHSV);
-        Color.colorToHSV(leftColor.toColor(), leftColorHSV);
+        //Color.colorToHSV(leftColor.toColor(), leftColorHSV);
         telemetry.addData("HSV intake", Arrays.toString(intakeColorHSV));
         telemetry.addData("HSV left", Arrays.toString(leftColorHSV));
         telemetry.addData("HSV right", Arrays.toString(rightColorHSV));

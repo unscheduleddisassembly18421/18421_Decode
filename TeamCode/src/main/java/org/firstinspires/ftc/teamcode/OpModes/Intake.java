@@ -18,7 +18,7 @@ public class Intake {
     private DcMotor intakeMotor = null;
 
     public static double INTAKEMOTOR_POWER_ON = 0.7;
-    public static double INTAKEMOTOR_POWER_OFF = 0;
+    private static double INTAKEMOTOR_POWER_OFF = 0;
 
     //Constructor
     public Intake(HardwareMap hwmap, Telemetry telemetry) {

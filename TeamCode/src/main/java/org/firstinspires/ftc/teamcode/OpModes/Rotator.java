@@ -82,6 +82,9 @@ public class Rotator {
         rightLight = hwmap.get(Servo.class, "rightil");
         leftLight = hwmap.get(Servo.class, "leftil");
 
+        leftLight.setPosition(0);
+        rightLight.setPosition(0);
+
         rightLight.setDirection(Servo.Direction.FORWARD);
         leftLight.setDirection(Servo.Direction.FORWARD);
 

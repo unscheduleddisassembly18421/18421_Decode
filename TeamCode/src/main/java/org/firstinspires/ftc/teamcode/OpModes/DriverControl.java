@@ -306,7 +306,7 @@ public class DriverControl extends OpMode {
           intakeClock.reset();
         }
 
-        if(g1.aWasPressed()){
+        if(g1.bWasPressed()){
           r.intake.intakeMotorOut();
         }
         break;
@@ -316,7 +316,7 @@ public class DriverControl extends OpMode {
           intakeClock.reset();
           intakeState = IntakeState.INTAKE3;
         }
-        if(g1.aWasPressed()){
+        if(g1.bWasPressed()){
           r.intake.intakeMotorOut();
         }
         break;
@@ -327,7 +327,7 @@ public class DriverControl extends OpMode {
           intakeClock.reset();
           intakeState = IntakeState.FULL;
         }
-        if(g1.aWasPressed()){
+        if(g1.bWasPressed()){
           r.intake.intakeMotorOut();
         }
         break;

@@ -121,13 +121,9 @@ public class DriverControl extends OpMode {
   public void init_loop() {
     if(gamepad1.dpad_left){
       greenPosition = GreenPosition.LEFT;
-      r.rotator.rightLightGreen();
-      r.rotator.leftLightGreen();
     }
     if(gamepad1.dpad_right){
       greenPosition = GreenPosition.RIGHT;
-      r.rotator.rightLightRed();
-      r.rotator.leftLightRed();
     }
     if(gamepad1.dpad_down){
       greenPosition = GreenPosition.MIDDLE;

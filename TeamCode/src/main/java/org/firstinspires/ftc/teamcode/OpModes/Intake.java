@@ -41,6 +41,11 @@ public class Intake {
         intakeMotor.setPower(INTAKEMOTOR_POWER_ON);
     }
 
+    public void intakeMotorOut(){
+        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+        intakeMotor.setPower(INTAKEMOTOR_POWER_ON);
+    }
+
     public class TurnOnIntake implements Action {
 
         @Override

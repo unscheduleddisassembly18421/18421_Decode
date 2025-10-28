@@ -113,6 +113,8 @@ public class Outtake {
         return (launcherMotor2.getVelocity());
     }
 
+    //actions
+
     public class ActivateShooter implements Action {
 
         @Override
@@ -126,6 +128,21 @@ public class Outtake {
     public Action activateShooter(){
         return new ActivateShooter();
     }
+
+    public class TurnOffShooter implements Action{
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            launcherMotor1Off();
+            launcherMotor2Off();
+            return false;
+        }
+    }
+    public Action turnOffShooter(){
+        return new TurnOffShooter();
+    }
+
+
     public class CheckShooterVelocity implements Action{
 
         @Override
@@ -150,6 +167,18 @@ public class Outtake {
         return new TurnElavatorMotorOn();
     }
 
+    public class TurnElavatorMotorOff implements Action{
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            elavatorMotorOff();
+            return false;
+        }
+    }
+    public Action turnElavatorMotorOff(){
+        return new TurnElavatorMotorOff();
+    }
+
     public class OpenHoodServo implements Action{
 
         @Override
@@ -158,9 +187,21 @@ public class Outtake {
             return false;
         }
     }
-
     public Action openHoodServo(){
         return new OpenHoodServo();
+    }
+
+    public class CloseHoodServo implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hoodServoStart();
+            return false;
+        }
+    }
+
+    public Action closeHoodServo(){
+        return new CloseHoodServo();
     }
 
 }

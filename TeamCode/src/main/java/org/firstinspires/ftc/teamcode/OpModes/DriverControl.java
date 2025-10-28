@@ -225,11 +225,10 @@ public class DriverControl extends OpMode {
     //}
 
 
-    //TODO figure out why doesn't work if pressed with intake
     switch(shooterState) {
       case READY:
         //outtake.r.elavatorMotorOff();
-        if (gamepad1.rightBumperWasPressed()) {
+        if (g1.right_bumper && !previousG1.right_bumper) {
           r.outtake.launcherMotor2OnFar();
           r.outtake.launcherMotor1OnFar();
           r.outtake.hoodServoShoot();
@@ -294,7 +293,7 @@ public class DriverControl extends OpMode {
       case READY:
         r.rotator.leftLightRed();
         r.rotator.rightLightRed();
-        if(g1.leftBumperWasPressed()){
+        if(g1.left_bumper && !previousG1.left_bumper){
           r.rotator.setPosition(firstAngle);
           r.intake.intakeMotorOn();
           intakeState = IntakeState.INTAKE1;
@@ -302,10 +301,13 @@ public class DriverControl extends OpMode {
         break;
 
       case INTAKE1:
-
         if(r.rotator.detectedBall() || g1.xWasPressed()){
           intakeState = IntakeState.INTAKE2;
           intakeClock.reset();
+        }
+
+        if(g1.aWasPressed()){
+          r.intake.intakeMotorOut();
         }
         break;
       case INTAKE2:
@@ -314,7 +316,9 @@ public class DriverControl extends OpMode {
           intakeClock.reset();
           intakeState = IntakeState.INTAKE3;
         }
-
+        if(g1.aWasPressed()){
+          r.intake.intakeMotorOut();
+        }
         break;
 
       case INTAKE3:
@@ -322,6 +326,9 @@ public class DriverControl extends OpMode {
         if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall()) || g1.xWasPressed()){
           intakeClock.reset();
           intakeState = IntakeState.FULL;
+        }
+        if(g1.aWasPressed()){
+          r.intake.intakeMotorOut();
         }
         break;
 
@@ -340,11 +347,7 @@ public class DriverControl extends OpMode {
         if (shooterState == ShooterState.RELOAD){
           intakeState = IntakeState.READY;
         }
-
-
         break;
-
-
     }
 
 

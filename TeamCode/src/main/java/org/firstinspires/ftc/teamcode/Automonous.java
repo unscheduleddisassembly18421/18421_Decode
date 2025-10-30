@@ -20,7 +20,6 @@ public class Automonous extends LinearOpMode {
     public enum AutoSelector {RED_FAR, RED_NEAR, BLUE_FAR, BLUE_NEAR}
     public AutoSelector autoSelector = AutoSelector.RED_FAR;
     public HwRobot r = null;
-    public static double SHOOTING_DELAY = 0.45;
     public static double SELECTOR_DELAY_TIME = 0.4;
             private final ElapsedTime runtime = new ElapsedTime();
     @Override
@@ -80,10 +79,6 @@ public class Automonous extends LinearOpMode {
 
 
         //Make the trajectories here
-
-
-
-
         // RED FAR
         TrajectoryActionBuilder redFarToShootingPositionFirstPath = r.drive.actionBuilder(redStartFar)//firstPathFarRed
                 .setTangent(Math.toRadians(180))
@@ -232,8 +227,18 @@ public class Automonous extends LinearOpMode {
         if (autoSelector == AutoSelector.RED_FAR) {
             Actions.runBlocking(
                     new SequentialAction(
-                            shoot(),
+                            r.activateShooter(),
 
+                            RedFarMoveToShootingFirstPath,
+                            r.checkShooterVelocity(),
+                            r.openHoodServo(),
+                            r.turnElavatorMotorOn(),
+                            r.turnToFirstShootingAngle(),
+                            r.turnToSecondShootingAngle(),
+                            r.turnToThirdShootingAngle(),
+                            //firstPath,
+                            //secondPath,
+                            //thirdPath,
                             new SleepAction(5),
 
                             RedFarMoveToShootingSecondPath,
@@ -257,22 +262,6 @@ public class Automonous extends LinearOpMode {
         else {
             r.drive.localizer.setPose(blueStartNear);
         }
-
-
-    }
-    public Action shoot(){
-        return new SequentialAction(
-                r.activateShooter(),
-                r.checkShooterVelocity(),
-                r.openHoodServo(),
-                r.turnElavatorMotorOn(),
-                r.turnToFirstShootingAngle(),
-                new SleepAction(SHOOTING_DELAY),
-                r.turnToSecondShootingAngle(),
-                new SleepAction(SHOOTING_DELAY),
-                r.turnToThirdShootingAngle(),
-                new SleepAction(SHOOTING_DELAY)
-        );
     }
 }
 

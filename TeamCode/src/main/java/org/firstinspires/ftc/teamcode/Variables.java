@@ -18,5 +18,7 @@ public class Variables {
     public static double INTAKE_DELAY = 310;
     public static double INTAKE_OFF_DELAY = 600;
 
+    public static double INTAKEREVERSE_DELAY = 500;
+
     public static double WIGGLE_DELAY = 100;
 }

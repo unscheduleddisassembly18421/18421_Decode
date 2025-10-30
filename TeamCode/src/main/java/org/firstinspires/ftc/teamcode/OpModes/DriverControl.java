@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import static org.firstinspires.ftc.teamcode.Variables.INTAKEREVERSE_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_OFF_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.RELOAD_DELAY;

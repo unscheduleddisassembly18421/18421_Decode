@@ -170,7 +170,15 @@ public class Automonous extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-12,-12),Math.toRadians(270))
                 .turnTo(Math.toRadians(220))
                 .endTrajectory();
-        TrajectoryActionBuilder blueNearShootingPositionThirdPath = blueNearShootingPositionSecondPath;//thirdPathNearBlue
+
+        TrajectoryActionBuilder blueNearShootingPositionThirdPath = blueNearShootingPositionSecondPath.fresh()//thirdPathNearBlue
+                .strafeToLinearHeading(new Vector2d(36, -12), Math.toRadians(270))
+                .setTangent(Math.toRadians(270))
+                .lineToY(-56)
+                .lineToY(-12)
+                .setTangent(Math.toRadians(220))
+                .strafeToLinearHeading(new Vector2d(-12, -12), Math.toRadians(220))
+                .endTrajectory();
 
         //build trajectories
 

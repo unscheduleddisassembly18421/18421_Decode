@@ -89,6 +89,10 @@ public class HwRobot {
         return intake.turnOnIntake();
     }
 
+    public Action turnOffIntake(){
+        return intake.turnOffIntake();
+    }
+
     //right front is in EH 0 named rf
     //right back is in EH 1 named rb
     //left back is in CH 0 named lb

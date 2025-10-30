@@ -252,7 +252,8 @@ public class Automonous extends LinearOpMode {
 
                     )
             );
-        } else if (autoSelector == AutoSelector.RED_NEAR) {
+        }
+        else if (autoSelector == AutoSelector.RED_NEAR) {
 
         }
         else if (autoSelector == AutoSelector.BLUE_FAR) {

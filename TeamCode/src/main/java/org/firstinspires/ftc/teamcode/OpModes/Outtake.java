@@ -68,7 +68,7 @@ public class Outtake {
 
     //commands
     public void launcherMotor1OnFar(){
-        launcherMotor1.setVelocity(FAR_LAUNCHERMOTOR_VELOCITY_ON);
+        launcherMotor1.setVelocity(CLOSE_LAUNCHERMOTOR_VELOCITY_ON);
     }
 
     public void launcherMotor1Off(){
@@ -76,7 +76,7 @@ public class Outtake {
     }
 
     public void  launcherMotor2OnFar(){
-        launcherMotor2.setVelocity(FAR_LAUNCHERMOTOR_VELOCITY_ON);
+        launcherMotor2.setVelocity(CLOSE_LAUNCHERMOTOR_VELOCITY_ON);
     }
 
     public void launcherMotor2Off(){

@@ -56,7 +56,6 @@ public class Automonous extends LinearOpMode {
 
                 autoSelector = AutoSelector.BLUE_NEAR;
             }
-            telemetry.update();
 
 
         }
@@ -69,17 +68,15 @@ public class Automonous extends LinearOpMode {
 
         Pose2d blueStartNear = new Pose2d(-63, -12, Math.toRadians(0));
 
-       //autoSelector = AutoSelector.RED_FAR;
-
         if (autoSelector == AutoSelector.RED_FAR) {
             r.drive.localizer.setPose(redStartFar);
         } else if (autoSelector == AutoSelector.RED_NEAR) {
             r.drive.localizer.setPose(redStartNear);
         } else if (autoSelector == AutoSelector.BLUE_FAR) {
             r.drive.localizer.setPose(blueStartFar);
-        } else if (autoSelector == AutoSelector.BLUE_NEAR) {
+        } else {
             r.drive.localizer.setPose(blueStartNear);
-        } //maybe use else is fine?  Check this later
+        }
 
 
         //Make the trajectories here
@@ -205,7 +202,7 @@ public class Automonous extends LinearOpMode {
         //BLUE NEAR
         Action BlueNearMoveToShootingFirstPath = blueNearShootingPositionFirstPath.build();
         Action BlueNearMoveToShootingSecondPath = blueNearShootingPositionSecondPath.build();
-        Action BlueNearMoveToShootingThirdPath = blueNearShootingPositionThirdPath.build();
+        Action BlueNearMoveToShootingPosition = blueNearShootingPositionThirdPath.build();
 
 
 
@@ -238,63 +235,28 @@ public class Automonous extends LinearOpMode {
                             shoot(),
 
                             new SleepAction(5),
-                            RedFarMoveToShootingFirstPath,
+
                             RedFarMoveToShootingSecondPath,
-                            RedFarMoveToShootingThirdPath
+                            r.checkShooterVelocity(),
+                            r.openHoodServo(),
+                            new SleepAction(5),
 
-                            //r.checkShooterVelocity(),
-                            //r.openHoodServo(),
-                            //new SleepAction(5),
-
-                            //r.checkShooterVelocity(),
-                            //r.openHoodServo()
+                            RedNearMoveToShootingThirdPath,
+                            r.checkShooterVelocity(),
+                            r.openHoodServo()
 
                     )
             );
-
         }
         else if (autoSelector == AutoSelector.RED_NEAR) {
-            Actions.runBlocking(
-                    new SequentialAction(
-
-                            new SleepAction(5),
-                            RedNearMoveToShootingFirstPath,
-                            RedNearMoveToShootingSecondPath,
-                            RedNearMoveToShootingThirdPath
-                    )
-            );
 
         }
         else if (autoSelector == AutoSelector.BLUE_FAR) {
-            Actions.runBlocking(
-                    new SequentialAction(
-
-                            new SleepAction(5),
-                            BlueFarMoveToShootingFirstPath,
-                            BlueFarMoveToShootingSecondPath,
-                            BlueFarMoveToShootingThirdPath
-                    )
-            );
 
         }
-        else if(autoSelector == AutoSelector.BLUE_NEAR){
-            Actions.runBlocking(
-                    new SequentialAction(
-
-                            new SleepAction(5),
-                            BlueNearMoveToShootingFirstPath,
-                            BlueNearMoveToShootingSecondPath,
-                            BlueNearMoveToShootingThirdPath
-                    )
-            );
-
-        }
-        else
+        else {
             r.drive.localizer.setPose(blueStartNear);
         }
-
-
-    {
 
 
     }

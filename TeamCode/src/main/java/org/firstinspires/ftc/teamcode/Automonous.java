@@ -254,9 +254,11 @@ public class Automonous extends LinearOpMode {
             );
         } else if (autoSelector == AutoSelector.RED_NEAR) {
 
-        } else if (autoSelector == AutoSelector.BLUE_FAR) {
+        }
+        else if (autoSelector == AutoSelector.BLUE_FAR) {
 
-        } else {
+        }
+        else {
             r.drive.localizer.setPose(blueStartNear);
         }
     }

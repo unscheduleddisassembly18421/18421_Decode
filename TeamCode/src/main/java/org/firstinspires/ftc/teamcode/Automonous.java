@@ -2,6 +2,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import static org.firstinspires.ftc.teamcode.Variables.INTAKE_DELAY;
+import static org.firstinspires.ftc.teamcode.Variables.INTAKE_OFF_DELAY;
+import static org.firstinspires.ftc.teamcode.Variables.IntakeState.INTAKE1;
+import static org.firstinspires.ftc.teamcode.Variables.firstAngle;
+import static org.firstinspires.ftc.teamcode.Variables.secondAngle;
+import static org.firstinspires.ftc.teamcode.Variables.thirdAngle;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
@@ -14,6 +21,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.OpModes.DriverControl;
+
 @Config
 @Autonomous(name= "Automonous")
 public class Automonous extends LinearOpMode {
@@ -22,6 +31,10 @@ public class Automonous extends LinearOpMode {
     public HwRobot r = null;
     public static double SHOOTING_DELAY = 0.45;
     public static double SELECTOR_DELAY_TIME = 0.4;
+
+    Variables.IntakeState intakeState = Variables.IntakeState.READY;
+    public ElapsedTime intakeClock = new ElapsedTime();
+
             private final ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() throws InterruptedException {
@@ -82,10 +95,15 @@ public class Automonous extends LinearOpMode {
         //Make the trajectories here
 
 
-
+        //RED FAR MOVE TO SHOOTING POSITION
+        //TrajectoryActionBuilder redFAr
 
         // RED FAR
-        TrajectoryActionBuilder redFarToShootingPositionFirstPath = r.drive.actionBuilder(redStartFar)//firstPathFarRed
+        TrajectoryActionBuilder redFarMoveToShootingPosition = r.drive.actionBuilder(redStartFar)
+                .turnTo(Math.toRadians(148))
+                .endTrajectory();
+
+        TrajectoryActionBuilder redFarFirstPath = redFarMoveToShootingPosition.fresh()//firstPathFarRed
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(38, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)
@@ -94,7 +112,7 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
 
-        TrajectoryActionBuilder redFarToShootingPositionSecondPath = redFarToShootingPositionFirstPath.fresh()//secondPathFarRed
+        TrajectoryActionBuilder redFarSecondPath = redFarFirstPath.fresh()//secondPathFarRed
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(50)
@@ -102,7 +120,7 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
 
-        TrajectoryActionBuilder redFarToShootingPositionThirdPath = redFarToShootingPositionSecondPath.fresh()//thirdPathFarRed
+        TrajectoryActionBuilder redFarThirdPath = redFarSecondPath.fresh()//thirdPathFarRed
                 .splineToLinearHeading(new Pose2d(-10, 38,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)
                 .setTangent(Math.toRadians(315))
@@ -110,7 +128,7 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
         //RED NEAR
-        TrajectoryActionBuilder redNearShootingPositionFirstPath = r.drive.actionBuilder(redStartNear)//firstPathNearRed
+        TrajectoryActionBuilder redNearFirstPath = r.drive.actionBuilder(redStartNear)//firstPathNearRed
                 .strafeToLinearHeading(new Vector2d(-12,12),Math.toRadians(90))
                 .setTangent(Math.toRadians(90))
                 .lineToY(56)
@@ -118,7 +136,7 @@ public class Automonous extends LinearOpMode {
                 .turnTo(Math.toRadians(145))
                 .endTrajectory();
 
-        TrajectoryActionBuilder redNearShootingPositionSecondPath = redNearShootingPositionFirstPath.fresh()//secondPathNearRed
+        TrajectoryActionBuilder redNearSecondPath = redNearFirstPath.fresh()//secondPathNearRed
                 .strafeToLinearHeading(new Vector2d(12, 12),Math.toRadians(90))
                 .setTangent(Math.toRadians(90))
                 .lineToY(56)
@@ -127,7 +145,7 @@ public class Automonous extends LinearOpMode {
                 .strafeToLinearHeading(new Vector2d(-12,12),Math.toRadians(145))
                 .endTrajectory();
 
-        TrajectoryActionBuilder redNearShootingPositionThirdPath = redNearShootingPositionSecondPath.fresh()//thirdPathNearRed
+        TrajectoryActionBuilder redNearThirdPath = redNearSecondPath.fresh()//thirdPathNearRed
                 .strafeToLinearHeading(new Vector2d(36, 12), Math.toRadians(90))
                 .setTangent(Math.toRadians(90))
                 .lineToY(56)
@@ -137,7 +155,7 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
         //BLUE FAR
-        TrajectoryActionBuilder blueFarShootingPositionFirstPath = r.drive.actionBuilder(blueStartFar)//firstPathFarBlue
+        TrajectoryActionBuilder blueFarFirstPath = r.drive.actionBuilder(blueStartFar)//firstPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(38, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-55)
@@ -145,21 +163,21 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(55, -15,Math.toRadians(210)),Math.toRadians(210))
                 .endTrajectory();
 
-        TrajectoryActionBuilder blueFarShootingPositionSecondPath = blueFarShootingPositionFirstPath.fresh()//secondPathFarBlue
+        TrajectoryActionBuilder blueFarSecondPath = blueFarFirstPath.fresh()//secondPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-50)
                 .splineToLinearHeading(new Pose2d(53, -15,Math.toRadians(210)),Math.toRadians(210))
                 .endTrajectory();
 
-        TrajectoryActionBuilder blueFarShootingPositionThirdPath = blueFarShootingPositionSecondPath.fresh()//thirdPathFarBlue
+        TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue
                 .splineToLinearHeading(new Pose2d(-12, -55,Math.toRadians(270)),Math.toRadians(270))
                 .setTangent(210)
                 .splineToLinearHeading(new Pose2d(53, -15,Math.toRadians(210)),Math.toRadians(210))
                 .endTrajectory();
 
         //BLUE NEAR
-        TrajectoryActionBuilder blueNearShootingPositionFirstPath = r.drive.actionBuilder(blueStartNear)//firstPathNearBlue
+        TrajectoryActionBuilder blueNearFirstPath = r.drive.actionBuilder(blueStartNear)//firstPathNearBlue
                 .strafeToLinearHeading(new Vector2d(-12,-12),Math.toRadians(270))
                 .setTangent(Math.toRadians(270))
                 .lineToY(-56)
@@ -167,7 +185,7 @@ public class Automonous extends LinearOpMode {
                 .turnTo(Math.toRadians(220))
                 .endTrajectory();
 
-        TrajectoryActionBuilder blueNearShootingPositionSecondPath = blueNearShootingPositionFirstPath.fresh()//secondPathNearBlue
+        TrajectoryActionBuilder blueNearSecondPath = blueNearFirstPath.fresh()//secondPathNearBlue
                 .strafeToLinearHeading(new Vector2d(12, -12),Math.toRadians(270))
                 .setTangent(Math.toRadians(270))
                 .lineToY(-56)
@@ -176,7 +194,7 @@ public class Automonous extends LinearOpMode {
                 .turnTo(Math.toRadians(220))
                 .endTrajectory();
 
-        TrajectoryActionBuilder blueNearShootingPositionThirdPath = blueNearShootingPositionSecondPath.fresh()//thirdPathNearBlue
+        TrajectoryActionBuilder blueNearThirdPath = blueNearSecondPath.fresh()//thirdPathNearBlue
                 .strafeToLinearHeading(new Vector2d(36, -12), Math.toRadians(270))
                 .setTangent(Math.toRadians(270))
                 .lineToY(-56)
@@ -186,45 +204,70 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
         //build trajectories
-
-        //RED FAR
-        Action RedFarMoveToShootingFirstPath = redFarToShootingPositionFirstPath.build();
-        Action RedFarMoveToShootingSecondPath = redFarToShootingPositionSecondPath.build();
-        Action RedFarMoveToShootingThirdPath = redFarToShootingPositionThirdPath.build();
-        //RED NEAR
-        Action RedNearMoveToShootingFirstPath = redNearShootingPositionFirstPath.build();
-        Action RedNearMoveToShootingSecondPath = redNearShootingPositionSecondPath.build();
-        Action RedNearMoveToShootingThirdPath = redNearShootingPositionThirdPath.build();
-        //BLUE FAR
-        Action BlueFarMoveToShootingFirstPath = blueFarShootingPositionFirstPath.build();
-        Action BlueFarMoveToShootingSecondPath = blueFarShootingPositionSecondPath.build();
-        Action BlueFarMoveToShootingThirdPath = blueFarShootingPositionThirdPath.build();
-        //BLUE NEAR
-        Action BlueNearMoveToShootingFirstPath = blueNearShootingPositionFirstPath.build();
-        Action BlueNearMoveToShootingSecondPath = blueNearShootingPositionSecondPath.build();
-        Action BlueNearMoveToShootingPosition = blueNearShootingPositionThirdPath.build();
-
-
-
-
         //Action *NameOfPath* = nameOfPath.build();
 
+        switch (intakeState){
+            case READY:
+                r.rotator.leftLightRed();
+                r.rotator.rightLightRed();
+                r.rotator.setPosition(firstAngle);
+                r.intake.intakeMotorOn();
+                intakeState = Variables.IntakeState.INTAKE1;
+
+                break;
+
+            case INTAKE1:
+                if(r.rotator.detectedBall()){
+                    intakeState = Variables.IntakeState.INTAKE2;
+                    intakeClock.reset();
+                }
+                break;
+            case INTAKE2:
+                r.rotator.setPosition(secondAngle);
+                if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
+                    intakeClock.reset();
+                    intakeState = Variables.IntakeState.INTAKE3;
+                }
+                break;
+
+            case INTAKE3:
+                r.rotator.setPosition(thirdAngle);
+                if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
+                    intakeClock.reset();
+                    intakeState = Variables.IntakeState.FULL;
+                }
+                break;
+
+            case FULL:
+                if(intakeClock.milliseconds() > INTAKE_OFF_DELAY) {
+                    r.intake.intakeMotorOff();
+                    r.rotator.leftLightGreen();
+                    r.rotator.rightLightGreen();
+                    intakeState = Variables.IntakeState.FIRING;
+                }
+
+                break;
+        }
+
+
         //RED FAR
-        Action firstPathRedFar = redFarToShootingPositionFirstPath.build();
-        Action secondPathRedFar = redFarToShootingPositionSecondPath.build();
-        Action thirdPathRedFar = redFarToShootingPositionThirdPath.build();
+        Action RedFarMoveToShootingFirstPath = redFarFirstPath.build();
+        Action RedFarMoveToShootingSecondPath = redFarSecondPath.build();
+        Action RedFarMoveToShootingThirdPath = redFarThirdPath.build();
         //RED NEAR
-        Action firstPathRedNear = redNearShootingPositionFirstPath.build();
-        Action secondPathRedNear = redNearShootingPositionSecondPath.build();
-        Action thirdPathRedNear = redNearShootingPositionThirdPath.build();
+        Action RedNearMoveToShootingFirstPath = redNearFirstPath.build();
+        Action RedNearMoveToShootingSecondPath = redNearSecondPath.build();
+        Action RedNearMoveToShootingThirdPath = redNearThirdPath.build();
         //BLUE FAR
-        Action firstPathBlueFar = blueFarShootingPositionFirstPath.build();
-        Action secondPathBlueFar = blueFarShootingPositionSecondPath.build();
-        Action thirdPathBlueFar = blueFarShootingPositionThirdPath.build();
+        Action BlueFarMoveToShootingFirstPath = blueFarFirstPath.build();
+        Action BlueFarMoveToShootingSecondPath = blueFarSecondPath.build();
+        Action BlueFarMoveToShootingThirdPath = blueFarThirdPath.build();
         //BLUE NEAR
-        Action firstPathBlueNear = blueNearShootingPositionFirstPath.build();
-        Action secondPathBlueNear = blueNearShootingPositionSecondPath.build();
-        Action thirdPathBlueNear = blueNearShootingPositionThirdPath.build();
+        Action BlueNearMoveToShootingFirstPath = blueNearFirstPath.build();
+        Action BlueNearMoveToShootingSecondPath = blueNearSecondPath.build();
+        Action BlueNearMoveToShootingThirdPath = blueNearThirdPath.build();
+
+
 
 
         waitForStart();
@@ -232,31 +275,81 @@ public class Automonous extends LinearOpMode {
         if (autoSelector == AutoSelector.RED_FAR) {
             Actions.runBlocking(
                     new SequentialAction(
+
                             shoot(),
 
                             new SleepAction(5),
+                            r.turnOnIntake(),
+                            RedFarMoveToShootingFirstPath,
+                            shoot(),
 
-                            RedFarMoveToShootingSecondPath,
-                            r.checkShooterVelocity(),
-                            r.openHoodServo(),
                             new SleepAction(5),
+                            r.turnOnIntake(),
+                            RedFarMoveToShootingSecondPath,
+                            shoot(),
 
-                            RedNearMoveToShootingThirdPath,
-                            r.checkShooterVelocity(),
-                            r.openHoodServo()
+                            new SleepAction(5),
+                            r.turnOnIntake(),
+                            RedFarMoveToShootingThirdPath,
+                            shoot()
+
 
                     )
             );
         }
         else if (autoSelector == AutoSelector.RED_NEAR) {
+            Actions.runBlocking(
+                    new SequentialAction(
+
+                            new SleepAction(5),
+                            r.turnOnIntake(),
+                            RedNearMoveToShootingFirstPath,
+                            shoot(),
+
+                            new SleepAction(5),
+                            r.turnOnIntake(),
+                            RedNearMoveToShootingSecondPath,
+                            shoot(),
+
+                            new SleepAction(5),
+                            r.turnOnIntake(),
+                            RedFarMoveToShootingThirdPath,
+                            shoot()
+
+                    )
+            );
 
         }
         else if (autoSelector == AutoSelector.BLUE_FAR) {
+            Actions.runBlocking(
+                    new SequentialAction(
+                            new SleepAction(5),
+                            BlueFarMoveToShootingFirstPath,
+
+                            BlueFarMoveToShootingSecondPath,
+
+                            BlueFarMoveToShootingThirdPath
+                    )
+            );
+
 
         }
-        else {
+        else if (autoSelector == AutoSelector.BLUE_NEAR){
+            Actions.runBlocking(
+                    new SequentialAction(
+                            new SleepAction(5),
+                            BlueNearMoveToShootingFirstPath,
+
+                            BlueNearMoveToShootingSecondPath,
+
+                            BlueNearMoveToShootingThirdPath
+                    )
+            );
+
+        }else
             r.drive.localizer.setPose(blueStartNear);
-        }
+
+
 
 
     }

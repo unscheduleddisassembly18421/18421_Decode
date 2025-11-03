@@ -58,7 +58,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.HwRobot;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
-import org.firstinspires.ftc.teamcode.Variables;
 
 /*
  * Demonstrates an empty iterative OpMode
@@ -94,12 +93,16 @@ public class DriverControl extends OpMode {
     READY, FIRE1, FIRE2, FIRE3, RELOAD
   }
 
+  public enum IntakeState {
+    READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
+  }
+
   public enum GreenPosition{
     RIGHT, MIDDLE, LEFT
   }
 
   ShooterState shooterState = ShooterState.READY;
-  Variables.IntakeState intakeState = Variables.IntakeState.READY;
+  IntakeState intakeState = IntakeState.READY;
   GreenPosition greenPosition;
 
   public ElapsedTime shooterClock = new ElapsedTime();
@@ -229,7 +232,7 @@ public class DriverControl extends OpMode {
         if (g1.right_bumper && !previousG1.right_bumper) {
           r.outtake.launcherMotor2OnFar();
           r.outtake.launcherMotor1OnFar();
-          r.outtake.hoodServoShoot();
+          r.outtake.hoodServoShootFar();
           r.outtake.elavatorMotorON();
           //rotator.setPosition(firstAngle);
           shooterState = ShooterState.FIRE1;
@@ -280,7 +283,7 @@ public class DriverControl extends OpMode {
               r.outtake.launcherMotor2Off();
               r.outtake.hoodServoStart();
               r.rotator.setPosition(firstAngle);
-              intakeState = Variables.IntakeState.READY;
+              intakeState = IntakeState.READY;
               shooterState = ShooterState.READY;
             }
             break;
@@ -294,13 +297,13 @@ public class DriverControl extends OpMode {
         if(g1.left_bumper && !previousG1.left_bumper){
           r.rotator.setPosition(firstAngle);
           r.intake.intakeMotorOn();
-          intakeState = Variables.IntakeState.INTAKE1;
+          intakeState = IntakeState.INTAKE1;
         }
         break;
 
       case INTAKE1:
         if(r.rotator.detectedBall() || g1.xWasPressed()){
-          intakeState = Variables.IntakeState.INTAKE2;
+          intakeState = IntakeState.INTAKE2;
           intakeClock.reset();
         }
 
@@ -312,7 +315,7 @@ public class DriverControl extends OpMode {
         r.rotator.setPosition(secondAngle);
         if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g1.xWasPressed())){
           intakeClock.reset();
-          intakeState = Variables.IntakeState.INTAKE3;
+          intakeState = IntakeState.INTAKE3;
         }
         if(g1.bWasPressed()){
           r.intake.intakeMotorOut();
@@ -323,7 +326,7 @@ public class DriverControl extends OpMode {
         r.rotator.setPosition(thirdAngle);
         if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall()) || g1.xWasPressed()){
           intakeClock.reset();
-          intakeState = Variables.IntakeState.FULL;
+          intakeState = IntakeState.FULL;
         }
         if(g1.bWasPressed()){
           r.intake.intakeMotorOut();
@@ -336,14 +339,14 @@ public class DriverControl extends OpMode {
           r.rotator.leftLightGreen();
           r.rotator.rightLightGreen();
           shooterState = ShooterState.READY;
-          intakeState = Variables.IntakeState.FIRING;
+          intakeState = IntakeState.FIRING;
         }
 
         break;
 
       case FIRING:
         if (shooterState == ShooterState.RELOAD){
-          intakeState = Variables.IntakeState.READY;
+          intakeState = IntakeState.READY;
         }
         break;
     }

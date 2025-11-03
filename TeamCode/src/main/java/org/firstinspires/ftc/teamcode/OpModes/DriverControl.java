@@ -232,7 +232,7 @@ public class DriverControl extends OpMode {
         if (g1.right_bumper && !previousG1.right_bumper) {
           r.outtake.launcherMotor2OnFar();
           r.outtake.launcherMotor1OnFar();
-          r.outtake.hoodServoShoot();
+          r.outtake.hoodServoShootFar();
           r.outtake.elavatorMotorON();
           //rotator.setPosition(firstAngle);
           shooterState = ShooterState.FIRE1;

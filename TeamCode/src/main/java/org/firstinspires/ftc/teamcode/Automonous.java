@@ -95,8 +95,7 @@ public class Automonous extends LinearOpMode {
         //Make the trajectories here
 
 
-        //RED FAR MOVE TO SHOOTING POSITION
-        //TrajectoryActionBuilder redFAr
+
 
         // RED FAR
         TrajectoryActionBuilder redFarMoveToShootingPosition = r.drive.actionBuilder(redStartFar)
@@ -155,6 +154,10 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
         //BLUE FAR
+        TrajectoryActionBuilder blueFarMoveToShootingPosition = r.drive.actionBuilder(blueStartFar)//blueFarMoveToShootingPosition
+                .turn(Math.toRadians(228))
+                .endTrajectory();
+
         TrajectoryActionBuilder blueFarFirstPath = r.drive.actionBuilder(blueStartFar)//firstPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(38, -35,Math.toRadians(270)),Math.toRadians(270))
@@ -251,6 +254,7 @@ public class Automonous extends LinearOpMode {
 
 
         //RED FAR
+        Action RedFarGoToShootingPosition = redFarMoveToShootingPosition.build();
         Action RedFarMoveToShootingFirstPath = redFarFirstPath.build();
         Action RedFarMoveToShootingSecondPath = redFarSecondPath.build();
         Action RedFarMoveToShootingThirdPath = redFarThirdPath.build();
@@ -259,6 +263,7 @@ public class Automonous extends LinearOpMode {
         Action RedNearMoveToShootingSecondPath = redNearSecondPath.build();
         Action RedNearMoveToShootingThirdPath = redNearThirdPath.build();
         //BLUE FAR
+        Action BlueFarGoToShootingPosition = blueFarMoveToShootingPosition.build();
         Action BlueFarMoveToShootingFirstPath = blueFarFirstPath.build();
         Action BlueFarMoveToShootingSecondPath = blueFarSecondPath.build();
         Action BlueFarMoveToShootingThirdPath = blueFarThirdPath.build();
@@ -275,20 +280,20 @@ public class Automonous extends LinearOpMode {
         if (autoSelector == AutoSelector.RED_FAR) {
             Actions.runBlocking(
                     new SequentialAction(
-
+                            RedFarGoToShootingPosition,
                             shoot(),
 
-                            new SleepAction(5),
+                            new SleepAction(1),
                             r.turnOnIntake(),
                             RedFarMoveToShootingFirstPath,
                             shoot(),
 
-                            new SleepAction(5),
+                            new SleepAction(1),
                             r.turnOnIntake(),
                             RedFarMoveToShootingSecondPath,
                             shoot(),
 
-                            new SleepAction(5),
+                            new SleepAction(1),
                             r.turnOnIntake(),
                             RedFarMoveToShootingThirdPath,
                             shoot()
@@ -301,19 +306,19 @@ public class Automonous extends LinearOpMode {
             Actions.runBlocking(
                     new SequentialAction(
 
-                            new SleepAction(5),
+                            new SleepAction(1),
                             r.turnOnIntake(),
                             RedNearMoveToShootingFirstPath,
                             shoot(),
 
-                            new SleepAction(5),
+                            new SleepAction(1),
                             r.turnOnIntake(),
                             RedNearMoveToShootingSecondPath,
                             shoot(),
 
-                            new SleepAction(5),
+                            new SleepAction(1),
                             r.turnOnIntake(),
-                            RedFarMoveToShootingThirdPath,
+                            RedNearMoveToShootingThirdPath,
                             shoot()
 
                     )
@@ -323,12 +328,23 @@ public class Automonous extends LinearOpMode {
         else if (autoSelector == AutoSelector.BLUE_FAR) {
             Actions.runBlocking(
                     new SequentialAction(
-                            new SleepAction(5),
+                            BlueFarGoToShootingPosition,
+                            shoot(),
+
+                            new SleepAction(1),
+                            r.turnOnIntake(),
                             BlueFarMoveToShootingFirstPath,
+                            shoot(),
 
+                            new SleepAction(1),
+                            r.turnOnIntake(),
                             BlueFarMoveToShootingSecondPath,
+                            shoot(),
 
-                            BlueFarMoveToShootingThirdPath
+                            new SleepAction(1),
+                            r.turnOnIntake(),
+                            BlueFarMoveToShootingThirdPath,
+                            shoot()
                     )
             );
 
@@ -337,12 +353,21 @@ public class Automonous extends LinearOpMode {
         else if (autoSelector == AutoSelector.BLUE_NEAR){
             Actions.runBlocking(
                     new SequentialAction(
-                            new SleepAction(5),
-                            BlueNearMoveToShootingFirstPath,
 
+                            new SleepAction(1),
+                            r.turnOnIntake(),
+                            RedNearMoveToShootingFirstPath,
+                            shoot(),
+
+                            new SleepAction(1),
+                            r.turnOnIntake(),
                             BlueNearMoveToShootingSecondPath,
+                            shoot(),
 
-                            BlueNearMoveToShootingThirdPath
+                            new SleepAction(1),
+                            r.turnOnIntake(),
+                            BlueNearMoveToShootingThirdPath,
+                            shoot()
                     )
             );
 

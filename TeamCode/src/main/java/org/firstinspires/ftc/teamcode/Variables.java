@@ -21,4 +21,9 @@ public class Variables {
     public static double INTAKEREVERSE_DELAY = 500;
 
     public static double WIGGLE_DELAY = 100;
+
+    public enum IntakeState {
+        READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
+    }
+
 }

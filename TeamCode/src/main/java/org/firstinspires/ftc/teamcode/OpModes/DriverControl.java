@@ -93,10 +93,6 @@ public class DriverControl extends OpMode {
     READY, FIRE1, FIRE2, FIRE3, RELOAD
   }
 
-  public enum CloseShooterState {
-    READY, FIRE1, FIRE2, FIRE3, RELOAD
-  }
-
   public enum IntakeState {
     READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
   }
@@ -106,7 +102,6 @@ public class DriverControl extends OpMode {
   }
 
   ShooterState shooterState = ShooterState.READY;
-  CloseShooterState closeShooterState = CloseShooterState.READY;
   IntakeState intakeState = IntakeState.READY;
   GreenPosition greenPosition;
 
@@ -171,9 +166,9 @@ public class DriverControl extends OpMode {
     //NEWCODE
 
 
-    if (gamepad1.aWasPressed()){
-      intakeToggle = ! intakeToggle;
-    }
+    //if (g1.a && ! previousG1.a){
+      //intakeToggle = ! intakeToggle;
+    //}
 
     //if (g1.bWasPressed()){
      //shooterToggle = ! shooterToggle;
@@ -237,7 +232,7 @@ public class DriverControl extends OpMode {
         if (g1.right_bumper && !previousG1.right_bumper) {
           r.outtake.launcherMotor2OnFar();
           r.outtake.launcherMotor1OnFar();
-          r.outtake.hoodServoShootFar();
+          r.outtake.hoodServoShoot();
           r.outtake.elavatorMotorON();
           //rotator.setPosition(firstAngle);
           shooterState = ShooterState.FIRE1;
@@ -294,69 +289,6 @@ public class DriverControl extends OpMode {
             break;
         }
 
-    switch(closeShooterState) {
-      case READY:
-        //outtake.r.elavatorMotorOff();
-        if (g1.right_bumper && !previousG1.right_bumper) {
-          r.outtake.launcherMotor2OnNear();
-          r.outtake.launcherMotor1OnNear();
-          r.outtake.hoodServoShootNear();
-          r.outtake.elavatorMotorON();
-          //rotator.setPosition(firstAngle);
-          shooterState = ShooterState.FIRE1;
-        }
-        break;
-
-      case FIRE1:
-
-        if (r.outtake.launchMotorsAtVelocity()) {
-          r.rotator.setPosition(firstShootingAngle);
-          r.outtake.elavatorMotorON();
-          shooterClock.reset();
-          shooterState = ShooterState.FIRE2;
-        }
-        break;
-
-      case FIRE2:
-        //if (!outtake.launchMotorsAtVelocity()) {
-        //outtake.r.elavatorMotorOff();
-        //}
-
-        if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
-          r.rotator.setPosition(secondShootingAngle);
-          //outtake.r.elavatorMotorON();
-          shooterClock.reset();
-          shooterState = ShooterState.FIRE3;
-        }
-        break;
-
-      case FIRE3:
-
-        //if (!outtake.launchMotorsAtVelocity()) {
-        //outtake.r.elavatorMotorOff();
-        //}
-
-        if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > SHOOTER_DELAY) {
-          r.rotator.setPosition(thirdShootingAngle);
-          //outtake.r.elavatorMotorON();
-          shooterClock.reset();
-          shooterState = ShooterState.RELOAD;
-        }
-        break;
-
-      case RELOAD:
-        if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > RELOAD_DELAY) {
-          r.outtake.elavatorMotorOff();
-          r.outtake.launcherMotor1Off();
-          r.outtake.launcherMotor2Off();
-          r.outtake.hoodServoStart();
-          r.rotator.setPosition(firstAngle);
-          intakeState = IntakeState.READY;
-          closeShooterState = CloseShooterState.READY;
-        }
-        break;
-    }
-
 
     switch (intakeState){
       case READY:
@@ -406,12 +338,7 @@ public class DriverControl extends OpMode {
           r.intake.intakeMotorOff();
           r.rotator.leftLightGreen();
           r.rotator.rightLightGreen();
-          if(intakeToggle){
-            closeShooterState = CloseShooterState.READY;
-          }
-          else{
-            shooterState = ShooterState.READY;
-          }
+          shooterState = ShooterState.READY;
           intakeState = IntakeState.FIRING;
         }
 
@@ -442,8 +369,6 @@ public class DriverControl extends OpMode {
     telemetry.addData("launcher2 motors velocity", r.outtake.getVelocity2());
     telemetry.addData("ball detected", r.rotator.detectedBall());
     telemetry.addData("green Position", greenPosition);
-    telemetry.addData("Close Shooter State", closeShooterState);
-    telemetry.addData("intake Toggle State", intakeToggle);
     telemetry.update();
 
     TelemetryPacket packet = new TelemetryPacket();

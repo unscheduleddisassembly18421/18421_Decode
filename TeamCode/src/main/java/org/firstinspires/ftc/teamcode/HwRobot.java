@@ -53,7 +53,7 @@ public class HwRobot {
     }
 
     public Action openHoodServo(){
-        return outtake.openHoodServo();
+        return outtake.openHoodServoFar();
     }
 
     public Action closeHoodServo(){
@@ -101,7 +101,7 @@ public class HwRobot {
     //left indicator light is in CH 3 named leftil
     //right indicator light is in CH 4 named rightil
     //pinpoint is in I2C bus 0 CH named pinpoint
-    //rotater servo is in SH 0 named rs
+    //rotator servo is in CH 0 named rs
     //elavator motor is in EH 2 named em
     //intake motor is in EH 3 named intakem
     //launcher motor 1 is in CH 3 named Lm1

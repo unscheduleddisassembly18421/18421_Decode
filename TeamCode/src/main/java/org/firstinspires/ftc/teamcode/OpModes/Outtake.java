@@ -72,12 +72,20 @@ public class Outtake {
         launcherMotor1.setVelocity(FAR_LAUNCHERMOTOR_VELOCITY_ON);
     }
 
+    public void launcherMotor1OnNear(){
+        launcherMotor1.setVelocity(CLOSE_LAUNCHERMOTOR_VELOCITY_ON);
+    }
+
     public void launcherMotor1Off(){
         launcherMotor1.setVelocity(0);
     }
 
     public void  launcherMotor2OnFar(){
         launcherMotor2.setVelocity(FAR_LAUNCHERMOTOR_VELOCITY_ON);
+    }
+
+    public void launcherMotor2OnNear(){
+        launcherMotor2.setVelocity(CLOSE_LAUNCHERMOTOR_VELOCITY_ON);
     }
 
     public void launcherMotor2Off(){
@@ -96,8 +104,12 @@ public class Outtake {
         hoodServo1.setPosition(HOODSERVO_START_POSITION);
     }
 
+    public void hoodServoShootNear(){
+        hoodServo1.setPosition(HOODSERVO_CLOSE_SHOOT_POSITION);
+    }
 
-    public void  hoodServoShoot(){
+
+    public void  hoodServoShootFar(){
         hoodServo1.setPosition(HOODSERVO_SHOOT_POSITION);
     }
 
@@ -180,16 +192,16 @@ public class Outtake {
         return new TurnElavatorMotorOff();
     }
 
-    public class OpenHoodServo implements Action{
+    public class OpenHoodServoFar implements Action{
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hoodServoShoot();
+            hoodServoShootFar();
             return false;
         }
     }
-    public Action openHoodServo(){
-        return new OpenHoodServo();
+    public Action openHoodServoFar(){
+        return new OpenHoodServoFar();
     }
 
     public class CloseHoodServo implements Action {

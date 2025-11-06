@@ -155,9 +155,9 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
         //BLUE FAR
-        TrajectoryActionBuilder blueFarMoveToShootingPosition = r.drive.actionBuilder(blueStartFar)//blueFarMoveToShootingPosition
-                .turn(Math.toRadians(228))
-                .endTrajectory();
+        //TrajectoryActionBuilder blueFarMoveToShootingPosition = r.drive.actionBuilder(blueStartFar)//blueFarMoveToShootingPosition
+          //      .turn(Math.toRadians(228))
+            //    .endTrajectory();
 
         TrajectoryActionBuilder blueFarFirstPath = r.drive.actionBuilder(blueStartFar)//firstPathFarBlue
                 .setTangent(Math.toRadians(180))
@@ -267,7 +267,7 @@ public class Automonous extends LinearOpMode {
         Action RedNearMoveToShootingSecondPath = redNearSecondPath.build();
         Action RedNearMoveToShootingThirdPath = redNearThirdPath.build();
         //BLUE FAR
-        Action BlueFarGoToShootingPosition = blueFarMoveToShootingPosition.build();
+        //Action BlueFarGoToShootingPosition = blueFarMoveToShootingPosition.build();
         Action BlueFarMoveToShootingFirstPath = blueFarFirstPath.build();
         Action BlueFarMoveToShootingSecondPath = blueFarSecondPath.build();
         Action BlueFarMoveToShootingThirdPath = blueFarThirdPath.build();
@@ -288,8 +288,9 @@ public class Automonous extends LinearOpMode {
                             shoot(),
 
                             new SleepAction(1),
-                            r.turnOnIntake(),
+                            intake(),
                             RedFarMoveToShootingFirstPath,
+
                             shoot(),
 
                             new SleepAction(1),
@@ -332,7 +333,7 @@ public class Automonous extends LinearOpMode {
         else if (autoSelector == AutoSelector.BLUE_FAR) {
             Actions.runBlocking(
                     new SequentialAction(
-                            BlueFarGoToShootingPosition,
+                            //BlueFarGoToShootingPosition,
                             shoot(),
 
                             new SleepAction(1),
@@ -394,6 +395,18 @@ public class Automonous extends LinearOpMode {
                 new SleepAction(SHOOTING_DELAY),
                 r.turnToThirdShootingAngle(),
                 new SleepAction(SHOOTING_DELAY)
+        );
+    }
+    public Action intake(){
+        return new SequentialAction(
+                r.turnOnIntake(),
+                r.turnToFirstAngle(),
+                new SleepAction(INTAKE_DELAY),
+                r.turnToSecondAngle(),
+                new SleepAction(INTAKE_DELAY),
+                r.turnToThirdAngle(),
+                new SleepAction(INTAKE_DELAY)
+
         );
     }
 }

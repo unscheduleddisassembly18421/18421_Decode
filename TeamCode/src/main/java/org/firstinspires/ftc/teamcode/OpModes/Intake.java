@@ -38,13 +38,18 @@ public class Intake {
     }
 
     public void intakeMotorOn(){
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setPower(INTAKEMOTOR_POWER_ON);
     }
 
-    public void intakeMotorOut(){
-        intakeMotor.setDirection(DcMotor.Direction.REVERSE);
+    public void intakeMotorForward(){
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
         intakeMotor.setPower(INTAKEMOTOR_POWER_ON);
     }
+     public void intakeMotorReverse(){
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+     }
+
 
     public class TurnOnIntake implements Action {
 

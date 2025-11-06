@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import static org.firstinspires.ftc.teamcode.Variables.INTAKEREVERSE_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_OFF_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.RELOAD_DELAY;
@@ -51,13 +50,10 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.HwRobot;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
 
 /*
  * Demonstrates an empty iterative OpMode
@@ -302,34 +298,43 @@ public class DriverControl extends OpMode {
         break;
 
       case INTAKE1:
-        if(r.rotator.detectedBall() || g1.xWasPressed()){
+        if(r.rotator.detectedBall() || g1.aWasPressed()){
           intakeState = IntakeState.INTAKE2;
           intakeClock.reset();
         }
 
-        if(g1.bWasPressed()){
-          r.intake.intakeMotorOut();
+        if(g1.b ){
+          r.intake.intakeMotorForward();
+        }
+        else {
+          r.intake.intakeMotorOn();
         }
         break;
       case INTAKE2:
         r.rotator.setPosition(secondAngle);
-        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g1.xWasPressed())){
+        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g1.aWasPressed())){
           intakeClock.reset();
           intakeState = IntakeState.INTAKE3;
         }
-        if(g1.bWasPressed()){
-          r.intake.intakeMotorOut();
+        if(g1.b){
+          r.intake.intakeMotorForward();
+        }
+        else{
+          r.intake.intakeMotorOn();
         }
         break;
 
       case INTAKE3:
         r.rotator.setPosition(thirdAngle);
-        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall()) || g1.xWasPressed()){
+        if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall()) || g1.aWasPressed()){
           intakeClock.reset();
           intakeState = IntakeState.FULL;
         }
-        if(g1.bWasPressed()){
-          r.intake.intakeMotorOut();
+        if(g1.b){
+          r.intake.intakeMotorForward();
+        }
+        else {
+          r.intake.intakeMotorOn();
         }
         break;
 
@@ -348,6 +353,14 @@ public class DriverControl extends OpMode {
         if (shooterState == ShooterState.RELOAD){
           intakeState = IntakeState.READY;
         }
+
+        if(g1.b){
+          r.intake.intakeMotorForward();
+        }
+        else{
+          r.intake.intakeMotorOff();
+        }
+
         break;
     }
 

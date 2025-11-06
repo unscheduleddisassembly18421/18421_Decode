@@ -55,6 +55,7 @@ public class Automonous extends LinearOpMode {
             telemetry.addLine("D-Pad Right for Red Near");
             telemetry.addLine("D-Pad Down for Blue Far");
             telemetry.addLine("D-Pad Left for Blue Near");
+            telemetry.update();
 
             if (gamepad1.dpad_up) {
 
@@ -210,7 +211,7 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
         //build trajectories
-        //Action *NameOfPath* = nameOfPath.build();
+
 
         switch (intakeState){
             case READY:
@@ -254,6 +255,9 @@ public class Automonous extends LinearOpMode {
 
                 break;
         }
+
+        //build trajectories
+        //Action *NameOfPath* = nameOfPath.build();
 
 
         //RED FAR

@@ -95,8 +95,8 @@ public class HwRobot {
 
     //right front is in EH 0 named rf
     //right back is in EH 1 named rb
-    //left back is in CH 0 named lb
-    //left front is in CH 1 named lf
+    //left back is in CH 1 named lb
+    //left front is in CH 0 named lf
     //hood servo is in CH 1 named hs1
     //left indicator light is in CH 3 named leftil
     //right indicator light is in CH 4 named rightil

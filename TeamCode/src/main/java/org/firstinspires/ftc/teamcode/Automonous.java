@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode;
 
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_OFF_DELAY;
-import static org.firstinspires.ftc.teamcode.Variables.IntakeState.INTAKE1;
 import static org.firstinspires.ftc.teamcode.Variables.firstAngle;
 import static org.firstinspires.ftc.teamcode.Variables.secondAngle;
 import static org.firstinspires.ftc.teamcode.Variables.thirdAngle;
@@ -32,7 +31,11 @@ public class Automonous extends LinearOpMode {
     public static double SHOOTING_DELAY = 0.45;
     public static double SELECTOR_DELAY_TIME = 0.4;
 
-    Variables.IntakeState intakeState = Variables.IntakeState.READY;
+    public enum IntakeState {
+        READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
+    }
+
+    IntakeState intakeState = IntakeState.READY;
     public ElapsedTime intakeClock = new ElapsedTime();
 
             private final ElapsedTime runtime = new ElapsedTime();
@@ -215,13 +218,13 @@ public class Automonous extends LinearOpMode {
                 r.rotator.rightLightRed();
                 r.rotator.setPosition(firstAngle);
                 r.intake.intakeMotorOn();
-                intakeState = Variables.IntakeState.INTAKE1;
+                intakeState = IntakeState.INTAKE1;
 
                 break;
 
             case INTAKE1:
                 if(r.rotator.detectedBall()){
-                    intakeState = Variables.IntakeState.INTAKE2;
+                    intakeState = IntakeState.INTAKE2;
                     intakeClock.reset();
                 }
                 break;
@@ -229,7 +232,7 @@ public class Automonous extends LinearOpMode {
                 r.rotator.setPosition(secondAngle);
                 if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
                     intakeClock.reset();
-                    intakeState = Variables.IntakeState.INTAKE3;
+                    intakeState = IntakeState.INTAKE3;
                 }
                 break;
 
@@ -237,7 +240,7 @@ public class Automonous extends LinearOpMode {
                 r.rotator.setPosition(thirdAngle);
                 if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
                     intakeClock.reset();
-                    intakeState = Variables.IntakeState.FULL;
+                    intakeState = IntakeState.FULL;
                 }
                 break;
 
@@ -246,7 +249,7 @@ public class Automonous extends LinearOpMode {
                     r.intake.intakeMotorOff();
                     r.rotator.leftLightGreen();
                     r.rotator.rightLightGreen();
-                    intakeState = Variables.IntakeState.FIRING;
+                    intakeState = IntakeState.FIRING;
                 }
 
                 break;

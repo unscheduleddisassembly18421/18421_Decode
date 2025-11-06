@@ -335,8 +335,8 @@ public class Automonous extends LinearOpMode {
         else if (autoSelector == AutoSelector.BLUE_FAR) {
             Actions.runBlocking(
                     new SequentialAction(
-                            //BlueFarGoToShootingPosition,
-                            //shoot(),
+                            BlueFarGoToShootingPosition,
+                            shoot(),
 
                             new SleepAction(1),
                             r.turnOnIntake(),

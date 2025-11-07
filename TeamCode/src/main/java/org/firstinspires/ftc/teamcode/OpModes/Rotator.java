@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
+import static org.firstinspires.ftc.teamcode.Variables.firstAngle;
+import static org.firstinspires.ftc.teamcode.Variables.firstShootingAngle;
+import static org.firstinspires.ftc.teamcode.Variables.secondAngle;
+import static org.firstinspires.ftc.teamcode.Variables.secondShootingAngle;
+import static org.firstinspires.ftc.teamcode.Variables.thirdAngle;
+import static org.firstinspires.ftc.teamcode.Variables.thirdShootingAngle;
+
 import android.graphics.Color;
 
 import androidx.annotation.NonNull;
@@ -29,13 +36,6 @@ public class Rotator {
     public static double kd = 0;
     public static double ki = 0;
 
-
-    public static double firstAngle = 25;
-    public static double secondAngle = 145;
-    public static double thirdAngle = 267;
-    public static double firstShootingAngle = 205;
-    public static double secondShootingAngle = 332;
-    public static double thirdShootingAngle = 90;
 
     public static double intakeTolerance = 6;
 
@@ -159,7 +159,7 @@ public class Rotator {
 
 
     //actions
-    public class turnToFirstShootingAngle implements Action {
+    public class TurnToFirstShootingAngle implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -168,10 +168,10 @@ public class Rotator {
         }
     }
     public Action turnToFirstShootingAngle(){
-        return new turnToFirstShootingAngle();
+        return new TurnToThirdShootingAngle();
     }
 
-    public class turnToSecondShootingAngle implements Action {
+    public class TurnToSecondShootingAngle implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -180,10 +180,10 @@ public class Rotator {
         }
     }
     public Action turnToSecondShootingAngle(){
-        return new turnToFirstShootingAngle();
+        return new TurnToSecondShootingAngle();
     }
 
-    public class turnToThirdShootingAngle implements Action {
+    public class TurnToThirdShootingAngle implements Action {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -192,7 +192,7 @@ public class Rotator {
         }
     }
     public Action turnToThirdShootingAngle(){
-        return new turnToFirstShootingAngle();
+        return new TurnToThirdShootingAngle();
     }
 
     public class TurnToFirstAngle implements Action {
@@ -229,5 +229,30 @@ public class Rotator {
     }
     public Action turnToThirdAngle(){
         return new TurnToThirdAngle();
+    }
+
+    public class WaitForBall implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            return  !detectedBall();
+        }
+    }
+    public Action waitForBall(){
+        return new WaitForBall();
+    }
+
+    public class UpdateRotator implements Action{
+
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            update();
+            return true;
+        }
+    }
+
+    public Action updateRotator(){
+        return new UpdateRotator();
     }
 }

@@ -10,6 +10,7 @@ import static org.firstinspires.ftc.teamcode.Variables.thirdAngle;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
@@ -213,48 +214,48 @@ public class Automonous extends LinearOpMode {
         //build trajectories
 
 
-        switch (intakeState){
-            case READY:
-                r.rotator.leftLightRed();
-                r.rotator.rightLightRed();
-                r.rotator.setPosition(firstAngle);
-                r.intake.intakeMotorOn();
-                intakeState = IntakeState.INTAKE1;
+        //switch (intakeState){
+           // case READY:
+                //r.rotator.leftLightRed();
+                //r.rotator.rightLightRed();
+                //r.rotator.setPosition(firstAngle);
+                //r.intake.intakeMotorOn();
+                //intakeState = IntakeState.INTAKE1;
 
-                break;
+                //break;
 
-            case INTAKE1:
-                if(r.rotator.detectedBall()){
-                    intakeState = IntakeState.INTAKE2;
-                    intakeClock.reset();
-                }
-                break;
-            case INTAKE2:
-                r.rotator.setPosition(secondAngle);
-                if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
-                    intakeClock.reset();
-                    intakeState = IntakeState.INTAKE3;
-                }
-                break;
+            //case INTAKE1:
+               // if(r.rotator.detectedBall()){
+                    //intakeState = IntakeState.INTAKE2;
+                    //intakeClock.reset();
+                //}
+                //break;
+           // case INTAKE2:
+               // r.rotator.setPosition(secondAngle);
+    //            if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
+      //              intakeClock.reset();
+        //            intakeState = IntakeState.INTAKE3;
+          //      }
+            //    break;
 
-            case INTAKE3:
-                r.rotator.setPosition(thirdAngle);
-                if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
-                    intakeClock.reset();
-                    intakeState = IntakeState.FULL;
-                }
-                break;
+     //       case INTAKE3:
+     //           r.rotator.setPosition(thirdAngle);
+     //           if(intakeClock.milliseconds() > INTAKE_DELAY && r.rotator.detectedBall()){
+     //               intakeClock.reset();
+     //               intakeState = IntakeState.FULL;
+     //           }
+     //           break;
 
-            case FULL:
-                if(intakeClock.milliseconds() > INTAKE_OFF_DELAY) {
-                    r.intake.intakeMotorOff();
-                    r.rotator.leftLightGreen();
-                    r.rotator.rightLightGreen();
-                    intakeState = IntakeState.FIRING;
-                }
+     //       case FULL:
+     //           if(intakeClock.milliseconds() > INTAKE_OFF_DELAY) {
+     //               r.intake.intakeMotorOff();
+      //              r.rotator.leftLightGreen();
+     //               r.rotator.rightLightGreen();
+     //               intakeState = IntakeState.FIRING;
+     //           }
 
-                break;
-        }
+       //         break;
+        //}
 
         //build trajectories
         //Action *NameOfPath* = nameOfPath.build();
@@ -286,26 +287,34 @@ public class Automonous extends LinearOpMode {
 
         if (autoSelector == AutoSelector.RED_FAR) {
             Actions.runBlocking(
-                    new SequentialAction(
-                            RedFarGoToShootingPosition,
-                            shoot(),
-
-                            new SleepAction(1),
-                            r.turnOnIntake(),
-                            RedFarMoveToShootingFirstPath,
-                            shoot(),
-
-                            new SleepAction(1),
-                            r.turnOnIntake(),
-                            RedFarMoveToShootingSecondPath,
-                            shoot(),
-
-                            new SleepAction(1),
-                            r.turnOnIntake(),
-                            RedFarMoveToShootingThirdPath,
+                    new ParallelAction(r.updateRotator(),
+                        new SequentialAction(
+                            //RedFarGoToShootingPosition,
+                            //shoot(),
+                            intake(),
                             shoot()
+//                            new SleepAction(1),
+//                            new ParallelAction(
+//                                RedFarMoveToShootingFirstPath,
+//                                intake()),
+//                            shoot(),
+//
+//                            new SleepAction(1),
+//                            new ParallelAction(
+//                                    RedFarMoveToShootingSecondPath,
+//                                    intake()
+//                            ),
+//                            shoot(),
+//
+//                            new SleepAction(1),
+//                            new ParallelAction(
+//                                    RedFarMoveToShootingThirdPath,
+//                                    intake()
+//                            ),
+//                            shoot()
 
 
+                        )
                     )
             );
         }
@@ -386,6 +395,7 @@ public class Automonous extends LinearOpMode {
 
 
     }
+    //TODO figure out why shoot, shoot, wait, shoot
     public Action shoot(){
         return new SequentialAction(
                 r.activateShooter(),
@@ -393,11 +403,30 @@ public class Automonous extends LinearOpMode {
                 r.openHoodServo(),
                 r.turnElavatorMotorOn(),
                 r.turnToFirstShootingAngle(),
-                new SleepAction(SHOOTING_DELAY),
+                new SleepAction(2),
                 r.turnToSecondShootingAngle(),
-                new SleepAction(SHOOTING_DELAY),
+                new SleepAction(2),
                 r.turnToThirdShootingAngle(),
-                new SleepAction(SHOOTING_DELAY)
+                new SleepAction(2)
+        );
+    }
+    
+    public Action intake(){
+        return new SequentialAction(
+                r.turnOnIntake(),
+                r.turnToFirstAngle(),
+                new SleepAction(2),
+                r.waitForBall(),
+                new SleepAction(2),
+                r.turnToSecondAngle(),
+                new SleepAction(2),
+                r.waitForBall(),
+                new SleepAction(2),
+                r.turnToThirdAngle(),
+                new SleepAction(2),
+                r.waitForBall(),
+                new SleepAction(2),
+                r.turnOffIntake()
         );
     }
 }

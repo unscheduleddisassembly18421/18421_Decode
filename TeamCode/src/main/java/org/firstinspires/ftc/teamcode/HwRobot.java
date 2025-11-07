@@ -93,6 +93,13 @@ public class HwRobot {
         return intake.turnOffIntake();
     }
 
+    public Action waitForBall() {
+        return rotator.waitForBall();
+    }
+
+    public Action updateRotator(){
+        return rotator.updateRotator();
+    }
     //right front is in EH 0 named rf
     //right back is in EH 1 named rb
     //left back is in CH 1 named lb

@@ -22,4 +22,6 @@ public class Variables {
 
     public static double WIGGLE_DELAY = 100;
 
+    public static double NEAR_RELOAD_DELAY = 300;
+
 }

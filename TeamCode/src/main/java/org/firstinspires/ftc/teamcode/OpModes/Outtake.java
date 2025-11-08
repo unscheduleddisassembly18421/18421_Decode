@@ -27,12 +27,14 @@ public class Outtake {
 
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
-    public static double HOODSERVO_SHOOT_POSITION = 0.543;
-    public static double HOODSERVO_CLOSE_SHOOT_POSITION = 0.66;
-    public static double FAR_LAUNCHERMOTOR_VELOCITY_ON = 1640;//max is around 2700
-    public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1640;//test
+    public static double HOODSERVO_SHOOT_POSITION = 0.1;
+    public static double HOODSERVO_CLOSE_SHOOT_POSITION = 0.655;
+    public static double FAR_LAUNCHERMOTOR_VELOCITY_ON = 1660;//max is around 2700
+    public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1600;//test
     public static double ELAVATORMOTOR_POWER_ON = 1;
-    public static double LAUNCHER_TOLERANCE = 0.975;
+    public static double LAUNCHER_TOLERANCE = 0.995;
+    public static double AUTO_LAUNCHERMOTOR_VELOCITY_ON = 1635;
+    public static double AUTO_HOODSERVO_SHOOT = 0.525;
 
 
     //constructor
@@ -118,6 +120,16 @@ public class Outtake {
                 (launcherMotor2.getVelocity() > LAUNCHER_TOLERANCE*FAR_LAUNCHERMOTOR_VELOCITY_ON );
     }
 
+    public boolean autoLaunchMotorsAtVelocity(){
+        return (launcherMotor1.getVelocity() > LAUNCHER_TOLERANCE*AUTO_LAUNCHERMOTOR_VELOCITY_ON) &&
+                (launcherMotor2.getVelocity() > LAUNCHER_TOLERANCE*AUTO_LAUNCHERMOTOR_VELOCITY_ON );
+    }
+
+    public boolean launcherMotorsAtVelocityNear(){
+        return (launcherMotor1.getVelocity() > LAUNCHER_TOLERANCE*CLOSE_LAUNCHERMOTOR_VELOCITY_ON) &&
+                (launcherMotor2.getVelocity() > LAUNCHER_TOLERANCE*CLOSE_LAUNCHERMOTOR_VELOCITY_ON);
+    }
+
     public double getVelocity1(){
         return (launcherMotor1.getVelocity());
     }
@@ -132,8 +144,8 @@ public class Outtake {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            launcherMotor1OnFar();
-            launcherMotor2OnFar();
+            launcherMotor1.setVelocity(AUTO_LAUNCHERMOTOR_VELOCITY_ON);
+            launcherMotor2.setVelocity(AUTO_LAUNCHERMOTOR_VELOCITY_ON);
             return false; //if the return is false, then the action ends!  If true, it continues.
         }
     }
@@ -160,7 +172,7 @@ public class Outtake {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return !launchMotorsAtVelocity();
+            return !autoLaunchMotorsAtVelocity();
         }
     }
     public Action checkShooterVelocity(){
@@ -196,7 +208,7 @@ public class Outtake {
 
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            hoodServoShootFar();
+            hoodServo1.setPosition(AUTO_HOODSERVO_SHOOT);
             return false;
         }
     }

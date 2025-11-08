@@ -5,11 +5,15 @@ package org.firstinspires.ftc.teamcode;
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.INTAKE_OFF_DELAY;
 import static org.firstinspires.ftc.teamcode.Variables.firstAngle;
+import static org.firstinspires.ftc.teamcode.Variables.firstShootingAngle;
 import static org.firstinspires.ftc.teamcode.Variables.secondAngle;
+import static org.firstinspires.ftc.teamcode.Variables.secondShootingAngle;
 import static org.firstinspires.ftc.teamcode.Variables.thirdAngle;
+import static org.firstinspires.ftc.teamcode.Variables.thirdShootingAngle;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.InstantAction;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
@@ -104,7 +108,7 @@ public class Automonous extends LinearOpMode {
 
         // RED FAR
         TrajectoryActionBuilder redFarMoveToShootingPosition = r.drive.actionBuilder(redStartFar)
-                .turnTo(Math.toRadians(148))
+                .turnTo(Math.toRadians(155))
                 .endTrajectory();
 
         TrajectoryActionBuilder redFarFirstPath = redFarMoveToShootingPosition.fresh()//firstPathFarRed
@@ -112,7 +116,7 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(38, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)
                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(55, 15,Math.toRadians(160)),Math.toRadians(160))
+                .splineToLinearHeading(new Pose2d(55, 15,Math.toRadians(155)),Math.toRadians(155))
                 .endTrajectory();
 
 
@@ -120,7 +124,7 @@ public class Automonous extends LinearOpMode {
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(50)
-                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(160)),Math.toRadians(160))
+                .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(155)),Math.toRadians(155))
                 .endTrajectory();
 
 
@@ -128,7 +132,7 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(-10, 38,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)
                 .setTangent(Math.toRadians(315))
-                .splineToLinearHeading(new Pose2d(50, 12,Math.toRadians(160)),Math.toRadians(160))
+                .splineToLinearHeading(new Pose2d(50, 12,Math.toRadians(155)),Math.toRadians(155))
                 .endTrajectory();
 
         //RED NEAR
@@ -287,36 +291,45 @@ public class Automonous extends LinearOpMode {
 
         if (autoSelector == AutoSelector.RED_FAR) {
             Actions.runBlocking(
-                    new ParallelAction(r.updateRotator(),
+                    new ParallelAction(
+                        r.updateRotator(),
                         new SequentialAction(
-                            //RedFarGoToShootingPosition,
-                            //shoot(),
-                            intake(),
-                            shoot()
-//                            new SleepAction(1),
-//                            new ParallelAction(
-//                                RedFarMoveToShootingFirstPath,
-//                                intake()),
+                                new InstantAction(()->r.rotator.setPosition(firstShootingAngle)),
+                                new SleepAction(2),
+                                new InstantAction(()->r.rotator.setPosition(thirdShootingAngle)),
+                                new SleepAction(2),
+                                new InstantAction(()->r.rotator.setPosition(secondShootingAngle))
+                        )));
+
+//                        new SequentialAction(
+//                            RedFarGoToShootingPosition,
 //                            shoot(),
 //
 //                            new SleepAction(1),
-//                            new ParallelAction(
-//                                    RedFarMoveToShootingSecondPath,
-//                                    intake()
-//                            ),
-//                            shoot(),
+//                              new ParallelAction(
+//                                  RedFarMoveToShootingFirstPath,
+//                                  intake()
+//                              ),
+//                              shoot(),
 //
-//                            new SleepAction(1),
-//                            new ParallelAction(
-//                                    RedFarMoveToShootingThirdPath,
-//                                    intake()
+//                              new SleepAction(1),
+//                              new ParallelAction(
+//                                      RedFarMoveToShootingSecondPath,
+//                                      intake()
+//                              ),
+//                               shoot(),
+//
+//                              new SleepAction(1),
+//                              new ParallelAction(
+//                                      RedFarMoveToShootingThirdPath,
+//                                      intake()
 //                            ),
-//                            shoot()
+//                             shoot()
 
 
-                        )
-                    )
-            );
+//                        )
+//                    )
+//            );
         }
         //Im pushing htis again
         else if (autoSelector == AutoSelector.RED_NEAR) {
@@ -399,15 +412,23 @@ public class Automonous extends LinearOpMode {
     public Action shoot(){
         return new SequentialAction(
                 r.activateShooter(),
-                r.checkShooterVelocity(),
                 r.openHoodServo(),
                 r.turnElavatorMotorOn(),
+                r.checkShooterVelocity(),
                 r.turnToFirstShootingAngle(),
-                new SleepAction(2),
-                r.turnToSecondShootingAngle(),
-                new SleepAction(2),
+                r.checkShooterVelocity(),
+                new SleepAction(0.45),
+                r.checkShooterVelocity(),
                 r.turnToThirdShootingAngle(),
-                new SleepAction(2)
+                new SleepAction(0.45),
+                r.checkShooterVelocity(),
+                r.turnToSecondShootingAngle(),
+                new SleepAction(0.45),
+                r.checkShooterVelocity(),
+                r.turnOffShooter(),
+                r.turnElavatorMotorOff(),
+                r.closeHoodServo(),
+                new SleepAction(0.3)
         );
     }
     
@@ -415,18 +436,19 @@ public class Automonous extends LinearOpMode {
         return new SequentialAction(
                 r.turnOnIntake(),
                 r.turnToFirstAngle(),
-                new SleepAction(2),
+                new SleepAction(0.2),
                 r.waitForBall(),
-                new SleepAction(2),
+                new SleepAction(0.2),
                 r.turnToSecondAngle(),
-                new SleepAction(2),
+                new SleepAction(0.2),
                 r.waitForBall(),
-                new SleepAction(2),
+                new SleepAction(0.2),
                 r.turnToThirdAngle(),
-                new SleepAction(2),
+                new SleepAction(0.2),
                 r.waitForBall(),
-                new SleepAction(2),
-                r.turnOffIntake()
+                new SleepAction(1),
+                r.turnOffIntake(),
+                new SleepAction(0.3)
         );
     }
 }

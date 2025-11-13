@@ -100,6 +100,10 @@ public class HwRobot {
     public Action updateRotator(){
         return rotator.updateRotator();
     }
+
+    public Action reverseIntake(){
+        return intake.reverseIntake();
+    }
     //right front is in EH 0 named rf
     //right back is in EH 1 named rb
     //left back is in CH 1 named lb

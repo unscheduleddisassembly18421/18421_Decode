@@ -168,7 +168,7 @@ public class Rotator {
         }
     }
     public Action turnToFirstShootingAngle(){
-        return new TurnToThirdShootingAngle();
+        return new TurnToFirstShootingAngle();
     }
 
     public class TurnToSecondShootingAngle implements Action {

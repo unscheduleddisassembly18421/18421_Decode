@@ -77,5 +77,18 @@ public class Intake {
         return new TurnOffIntake();
     }
 
+    public class ReverseIntake implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            intakeMotorForward();
+            return false;
+        }
+    }
+
+    public Action reverseIntake(){
+        return new ReverseIntake();
+    }
+
 
 }

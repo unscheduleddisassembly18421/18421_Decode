@@ -57,13 +57,10 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
-import org.firstinspires.ftc.teamcode.Automonous;
 import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.HwRobot;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -108,6 +105,8 @@ public class DriverControl extends OpMode {
   double  drive           = 0;        // Desired forward power/speed (-1 to +1)
   double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
   double  turn            = 0;
+
+  public static double BEARING_OFFSET = 10;
 
   Gamepad g1 = new Gamepad();
   Gamepad g2 = new Gamepad();
@@ -162,13 +161,13 @@ public class DriverControl extends OpMode {
 
   @Override
   public void init_loop() {
-    if(gamepad1.dpad_left){
+    if(gamepad2.dpad_left){
       greenPosition = GreenPosition.LEFT;
     }
-    if(gamepad1.dpad_right){
+    if(gamepad2.dpad_right){
       greenPosition = GreenPosition.RIGHT;
     }
-    if(gamepad1.dpad_down){
+    if(gamepad2.dpad_down){
       greenPosition = GreenPosition.MIDDLE;
     }
     telemetry.addData("green position", greenPosition);
@@ -197,72 +196,18 @@ public class DriverControl extends OpMode {
 
     telemetry.addData("Status", "Run Time: " + runtime.toString());
 
+    //NEW CODE
 
+    if(g2.dpad_up){
+      r.rotator.setPosition(firstAngle);
+    }
+    if(g2.dpad_right){
+      r.rotator.setPosition(secondAngle);
+    }
+    if(g2.dpad_left){
+      r.rotator.setPosition(thirdAngle);
+    }
 
-
-
-
-    //NEWCODE
-
-
-    //if (g1.a && ! previousG1.a){
-      //intakeToggle = ! intakeToggle;
-    //}
-
-    //if (g1.bWasPressed()){
-     //shooterToggle = ! shooterToggle;
-    //}
-
-    //if (g1.xWasPressed()){
-      //elevatorToggle = !   elevatorToggle;
-    //}
-
-    //if(g1.yWasPressed()){
-      //hoodToggle = ! hoodToggle;
-    //}
-
-    //if(g1.dpad_up){
-      //r.rotator.setPosition(firstAngle);
-    //}
-    //if(g1.dpad_down){
-      //r.rotator.setPosition(secondAngle);
-    //}
-    //if(g1.dpad_left){
-      //r.rotator.setPosition(thirdAngle);
-    //}
-
-
-    //Intake
-    //if (intakeToggle){
-    //intake.intakeMotorOn();
-    //}
-    //else{
-      //intake.intakeMotorOff();
-    //}
-
-    //Launcher flywheel
-//    if (shooterToggle){
-//      outtake.launcherMotor1On();
-//      outtake.launcherMotor2On();
-//    }
-//    else{
-//      outtake.launcherMotor1Off();
-//      outtake.launcherMotor2Off();
-//    }
-
-//    if(elavatorToggle){
-//      outtake.elavatorMotorON();
-//    }
-//    else{
-//      outtake.elavatorMotorOff();
-//    }
-
-   // if(hoodToggle){
-     // outtake.hoodServoShoot();
-    //}
-    //else{
-      //outtake.hoodServoStart();
-    //}
 
 
     switch(shooterState) {
@@ -421,7 +366,7 @@ public class DriverControl extends OpMode {
         }
         break;
       case INTAKE2:
-        r.rotator.setPosition(secondAngle);
+        r.rotator.setPosition(thirdAngle);
         if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall() || g2.xWasPressed())){
           intakeClock.reset();
           intakeState = IntakeState.INTAKE3;
@@ -435,7 +380,7 @@ public class DriverControl extends OpMode {
         break;
 
       case INTAKE3:
-        r.rotator.setPosition(thirdAngle);
+        r.rotator.setPosition(secondAngle);
         if(intakeClock.milliseconds() > INTAKE_DELAY && (r.rotator.detectedBall()) || g2.xWasPressed()){
           intakeClock.reset();
           intakeState = IntakeState.FULL;
@@ -512,23 +457,14 @@ public class DriverControl extends OpMode {
       }
     }
 
-    // Tell the driver what we see, and what to do.
-//    if (targetFound) {
-//      telemetry.addData("\n>","HOLD Left-Bumper to Drive to Target\n");
-//      telemetry.addData("Found", "ID %d (%s)", desiredTag.id, desiredTag.metadata.name);
-//      telemetry.addData("Range",  "%5.1f inches", desiredTag.ftcPose.range);
-//      telemetry.addData("Bearing","%3.0f degrees", desiredTag.ftcPose.bearing);
-//      telemetry.addData("Yaw","%3.0f degrees", desiredTag.ftcPose.yaw);
-//    } else {
-//      telemetry.addData("\n>","Drive using joysticks to find valid target\n");
-//    }
-
     // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
     if (gamepad1.left_bumper && targetFound) {
 
       // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
       //double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-      double  headingError    = desiredTag.ftcPose.bearing;
+      double  headingError    = desiredTag.ftcPose.bearing - BEARING_OFFSET;
+      telemetry.addData("bearing", desiredTag.ftcPose.bearing);
+      telemetry.addData("bearing offset", BEARING_OFFSET);
       //double  yawError        = desiredTag.ftcPose.yaw;
 
       // Use the speed and turn "gains" to calculate how we want the robot to move.
@@ -543,9 +479,9 @@ public class DriverControl extends OpMode {
       drive  = -gamepad1.left_stick_y  ;  // Reduce drive rate to 50%.
       strafe = -gamepad1.left_stick_x  ;  // Reduce strafe rate to 50%.
       turn   = -gamepad1.right_stick_x ;  // Reduce turn rate to 33%.
-      telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+      //telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
     }
-    telemetry.update();
+//    telemetry.update();
 
 
 
@@ -575,6 +511,7 @@ public class DriverControl extends OpMode {
     telemetry.addData("green Position", greenPosition);
     telemetry.addData("close motors at velocity", r.outtake.launcherMotorsAtVelocityNear());
     telemetry.addData("near shooting state", nearShooterState);
+    telemetry.addData("bearing error", BEARING_OFFSET);
     telemetry.update();
 
     TelemetryPacket packet = new TelemetryPacket();

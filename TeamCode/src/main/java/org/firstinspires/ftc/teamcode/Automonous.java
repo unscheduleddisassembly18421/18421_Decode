@@ -108,6 +108,7 @@ public class Automonous extends LinearOpMode {
 
         // RED FAR
         TrajectoryActionBuilder redFarMoveToShootingPosition = r.drive.actionBuilder(redStartFar)
+                .lineToX(56)
                 .turnTo(Math.toRadians(155))
                 .endTrajectory();
 
@@ -293,43 +294,44 @@ public class Automonous extends LinearOpMode {
             Actions.runBlocking(
                     new ParallelAction(
                         r.updateRotator(),
-                        new SequentialAction(
-                                new InstantAction(()->r.rotator.setPosition(firstShootingAngle)),
-                                new SleepAction(2),
-                                new InstantAction(()->r.rotator.setPosition(thirdShootingAngle)),
-                                new SleepAction(2),
-                                new InstantAction(()->r.rotator.setPosition(secondShootingAngle))
-                        )));
-
 //                        new SequentialAction(
-//                            RedFarGoToShootingPosition,
-//                            shoot(),
-//
-//                            new SleepAction(1),
-//                              new ParallelAction(
-//                                  RedFarMoveToShootingFirstPath,
-//                                  intake()
-//                              ),
-//                              shoot(),
-//
-//                              new SleepAction(1),
-//                              new ParallelAction(
-//                                      RedFarMoveToShootingSecondPath,
-//                                      intake()
-//                              ),
-//                               shoot(),
-//
-//                              new SleepAction(1),
-//                              new ParallelAction(
-//                                      RedFarMoveToShootingThirdPath,
-//                                      intake()
-//                            ),
-//                             shoot()
+//                                new InstantAction(()->r.rotator.setPosition(firstShootingAngle)),
+//                                new SleepAction(2),
+//                                new InstantAction(()->r.rotator.setPosition(thirdShootingAngle)),
+//                                new SleepAction(2),
+//                                new InstantAction(()->r.rotator.setPosition(secondShootingAngle))
 
 
-//                        )
-//                    )
-//            );
+                          new SequentialAction(//can do turn to first angle here to speed up time
+                              RedFarGoToShootingPosition,
+                              shoot(),
+
+                              new SleepAction(1),
+                                new ParallelAction(
+                                    RedFarMoveToShootingFirstPath,
+                                    intake()
+                                ),
+                                shoot(),
+
+                                new SleepAction(1),
+                                new ParallelAction(
+                                        RedFarMoveToShootingSecondPath,
+                                        intake()
+                                ),
+                                 shoot(),
+
+                               new SleepAction(1),
+                                new ParallelAction(
+                                        RedFarMoveToShootingThirdPath,
+                                        intake()
+                              ),
+                               shoot()
+
+
+                        )
+                    )
+                    );
+
         }
         //Im pushing htis again
         else if (autoSelector == AutoSelector.RED_NEAR) {
@@ -411,13 +413,14 @@ public class Automonous extends LinearOpMode {
     //TODO figure out why shoot, shoot, wait, shoot
     public Action shoot(){
         return new SequentialAction(
+                r.turnToSecondAngle(),
                 r.activateShooter(),
                 r.openHoodServo(),
+                new SleepAction(0.5),
                 r.turnElavatorMotorOn(),
                 r.checkShooterVelocity(),
                 r.turnToFirstShootingAngle(),
-                r.checkShooterVelocity(),
-                new SleepAction(0.45),
+                new SleepAction(0.45), //.45
                 r.checkShooterVelocity(),
                 r.turnToThirdShootingAngle(),
                 new SleepAction(0.45),
@@ -426,6 +429,7 @@ public class Automonous extends LinearOpMode {
                 new SleepAction(0.45),
                 r.checkShooterVelocity(),
                 r.turnOffShooter(),
+                new SleepAction(0.5),
                 r.turnElavatorMotorOff(),
                 r.closeHoodServo(),
                 new SleepAction(0.3)
@@ -439,16 +443,18 @@ public class Automonous extends LinearOpMode {
                 new SleepAction(0.2),
                 r.waitForBall(),
                 new SleepAction(0.2),
-                r.turnToSecondAngle(),
+                r.turnToThirdAngle(),
                 new SleepAction(0.2),
                 r.waitForBall(),
                 new SleepAction(0.2),
-                r.turnToThirdAngle(),
+                r.turnToSecondAngle(),
                 new SleepAction(0.2),
                 r.waitForBall(),
                 new SleepAction(1),
                 r.turnOffIntake(),
-                new SleepAction(0.3)
+                r.reverseIntake(),
+                new SleepAction(0.5),
+                r.turnOffIntake()
         );
     }
 }

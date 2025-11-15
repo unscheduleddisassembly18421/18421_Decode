@@ -174,14 +174,14 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(38, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-55)
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(205)),Math.toRadians(205))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarSecondPath = blueFarFirstPath.fresh()//secondPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(205)),Math.toRadians(205))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue

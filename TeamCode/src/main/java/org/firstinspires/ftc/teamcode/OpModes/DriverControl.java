@@ -210,6 +210,9 @@ public class DriverControl extends OpMode {
       r.rotator.setPosition(thirdAngle);
     }
 
+    if(g2.dpad_down && !previousG2.dpad_down){
+      r.outtake.liftServoLift();
+    }
 
 
     switch(shooterState) {

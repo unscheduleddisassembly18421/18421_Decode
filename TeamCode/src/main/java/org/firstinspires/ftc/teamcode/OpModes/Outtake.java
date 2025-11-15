@@ -23,6 +23,8 @@ public class Outtake {
     private DcMotorEx launcherMotor2 = null;
     private DcMotor elavatorMotor = null;
     private Servo hoodServo1 = null;
+    private Servo liftServo1 = null;
+    private Servo liftServo2 = null;
     //private Servo hoodServo2 = null;
 
     //Positions
@@ -33,8 +35,9 @@ public class Outtake {
     public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1675;//test
     public static double ELAVATORMOTOR_POWER_ON = 1;
     public static double LAUNCHER_TOLERANCE = 0.995;
-    public static double AUTO_LAUNCHERMOTOR_VELOCITY_ON = 2025;
+    public static double AUTO_LAUNCHERMOTOR_VELOCITY_ON = 2000;
     public static double AUTO_HOODSERVO_SHOOT = 0.455;
+    public static double LIFTSERVO_LIFT_POSITION = 0.35;
 
 
     //constructor
@@ -46,9 +49,14 @@ public class Outtake {
         launcherMotor1 = hwmap.get(DcMotorEx.class, "Lm1");
         launcherMotor2 = hwmap.get(DcMotorEx.class, "Lm2");
         elavatorMotor = hwmap.get(DcMotor.class, "em");
+        liftServo1 = hwmap.get(Servo.class, "ls1");
+        liftServo2 = hwmap.get(Servo.class, "lm2");
 
         hoodServo1.setDirection(Servo.Direction.FORWARD);
         //hoodServo2.setDirection(Servo.Direction.REVERSE);
+
+        liftServo1.setDirection(Servo.Direction.FORWARD);
+        liftServo2.setDirection(Servo.Direction.FORWARD);
 
         launcherMotor1.setDirection(DcMotor.Direction.FORWARD);
         launcherMotor2.setDirection(DcMotor.Direction.FORWARD);
@@ -66,6 +74,7 @@ public class Outtake {
 
     public void init(){
         hoodServo1.setPosition(HOODSERVO_START_POSITION);
+        liftServoStart();
     }
 
 
@@ -113,6 +122,16 @@ public class Outtake {
 
     public void  hoodServoShootFar(){
         hoodServo1.setPosition(HOODSERVO_SHOOT_POSITION);
+    }
+
+    public void liftServoStart(){
+        liftServo1.setPosition(0);
+        liftServo2.setPosition(0);
+    }
+
+    public void liftServoLift(){
+        liftServo1.setPosition(LIFTSERVO_LIFT_POSITION);
+        liftServo2.setPosition(LIFTSERVO_LIFT_POSITION);
     }
 
     public boolean launchMotorsAtVelocity(){

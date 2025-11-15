@@ -110,7 +110,7 @@ public class Automonous extends LinearOpMode {
         // RED FAR
         TrajectoryActionBuilder redFarMoveToShootingPosition = r.drive.actionBuilder(redStartFar)
                 .lineToX(56)
-                .turnTo(Math.toRadians(160))
+                .turnTo(Math.toRadians(156))
                 .endTrajectory();
 
         TrajectoryActionBuilder redFarFirstPath = redFarMoveToShootingPosition.fresh()//firstPathFarRed
@@ -118,7 +118,7 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(38, 35,Math.toRadians(90)),Math.toRadians(90))
                 .lineToY(55)
                 .setTangent(Math.toRadians(270))
-                .splineToLinearHeading(new Pose2d(55, 15,Math.toRadians(155)),Math.toRadians(155))
+                .splineToLinearHeading(new Pose2d(55, 15,Math.toRadians(158)),Math.toRadians(158))
                 .endTrajectory();
 
 
@@ -166,7 +166,8 @@ public class Automonous extends LinearOpMode {
 
         //BLUE FAR
         TrajectoryActionBuilder blueFarMoveToShootingPosition = r.drive.actionBuilder(blueStartFar)//blueFarMoveToShootingPosition
-                .turn(Math.toRadians(228))
+                .lineToX(56)
+                .turn(Math.toRadians(20))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarFirstPath = r.drive.actionBuilder(blueStartFar)//firstPathFarBlue
@@ -186,7 +187,7 @@ public class Automonous extends LinearOpMode {
 
         TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue
                 .splineToLinearHeading(new Pose2d(-10, -38,Math.toRadians(270)),Math.toRadians(270))
-                .lineToY(-55)
+                .lineToY(-53)
                 .splineToLinearHeading(new Pose2d(55, -15,Math.toRadians(205)),Math.toRadians(205))
                 .endTrajectory();
 
@@ -378,17 +379,16 @@ public class Automonous extends LinearOpMode {
                     new ParallelAction(
                             r.updateRotator(),
                             new SequentialAction(
-                                    //BlueFarGoToShootingPosition,
+                                    BlueFarGoToShootingPosition,
                                     shoot(),
                                     new SleepAction(1),
 
                                 new ParallelAction(
-
                                         BlueFarMoveToShootingFirstPath,
-                                        shoot()
+                                        intake()
                                 ),
 
-
+                                    shoot(),
                                     new SleepAction(1),
 
                                 new ParallelAction(

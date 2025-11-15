@@ -133,4 +133,6 @@ public class HwRobot {
     //right color sensor is in EH I2C 0 named rightcs
     //left color sensor is in CH I2C 2  named leftcs
     //intake color sensor is in CH I2C 1 named ics
+    //lift servo 1 is in CH servo 5, named ls1
+    //lift servo 2 id in EH servo 0, named ls2
 }

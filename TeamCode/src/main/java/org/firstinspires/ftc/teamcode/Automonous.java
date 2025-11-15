@@ -174,20 +174,20 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(38, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-55)
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(55, -15,Math.toRadians(205)),Math.toRadians(205))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarSecondPath = blueFarFirstPath.fresh()//secondPathFarBlue
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(13, -35,Math.toRadians(270)),Math.toRadians(270))
+                .splineToLinearHeading(new Pose2d(15, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(53, -15,Math.toRadians(205)),Math.toRadians(205))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue
                 .splineToLinearHeading(new Pose2d(-12, -55,Math.toRadians(270)),Math.toRadians(270))
                 .setTangent(210)
-                .splineToLinearHeading(new Pose2d(53, -15,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(53, -15,Math.toRadians(205)),Math.toRadians(205))
                 .endTrajectory();
 
         //BLUE NEAR
@@ -385,11 +385,11 @@ public class Automonous extends LinearOpMode {
                                 new ParallelAction(
 
                                         BlueFarMoveToShootingFirstPath,
-                                        shoot()
+                                        intake()
                                 ),
 
-
-                                    new SleepAction(1),
+                                shoot(),
+                                new SleepAction(1),
 
                                 new ParallelAction(
                                     intake(),
@@ -459,20 +459,20 @@ public class Automonous extends LinearOpMode {
                 r.turnToSecondAngle(),
                 r.activateShooter(),
                 r.openHoodServo(),
-                new SleepAction(0.6),
+                new SleepAction(0.5),
                 r.turnElavatorMotorOn(),
                 r.checkShooterVelocity(),
                 r.turnToFirstShootingAngle(),
-                new SleepAction(0.4), //.45
+                new SleepAction(0.35), //.45
                 r.checkShooterVelocity(),
                 r.turnToThirdShootingAngle(),
-                new SleepAction(0.4),
+                new SleepAction(0.35),
                 r.checkShooterVelocity(),
                 r.turnToSecondShootingAngle(),
-                new SleepAction(0.4),
+                new SleepAction(0.35),
                 r.checkShooterVelocity(),
                 //r.turnOffShooter(),
-                new SleepAction(0.5),
+                new SleepAction(0.25),
                 r.turnElavatorMotorOff(),
                 r.closeHoodServo()
         );

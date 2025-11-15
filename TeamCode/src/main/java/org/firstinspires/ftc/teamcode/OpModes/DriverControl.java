@@ -91,8 +91,10 @@ public class DriverControl extends OpMode {
 
   private VisionPortal visionPortal;               // Used to manage the video source.
   private AprilTagProcessor aprilTag;              // Used for managing the AprilTag detection process.
-  private AprilTagDetection desiredTag = null;
-  boolean targetFound     = false;  // Used to hold the data for a detected AprilTag
+  private AprilTagDetection blueDesiredTag = null;
+  private AprilTagDetection redDesiredTag = null;
+  boolean blueTargetFound     = false;// Used to hold the data for a detected AprilTag
+  boolean redTargetFound    = false;
 
   final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
   final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
@@ -276,7 +278,7 @@ public class DriverControl extends OpMode {
     switch(nearShooterState) {
       case READY:
         //outtake.r.elavatorMotorOff();
-        if (g2.y && !previousG1.y) {
+        if (g2.y && !previousG2.y) {
           r.outtake.launcherMotor2OnNear();
           r.outtake.launcherMotor1OnNear();
           r.outtake.hoodServoShootNear();
@@ -433,8 +435,10 @@ public class DriverControl extends OpMode {
 
     r.rotator.readColorSensors();
 
-    targetFound = false;
-    desiredTag  = null;
+    blueTargetFound = false;
+    redTargetFound = false;
+    blueDesiredTag  = null;
+    redDesiredTag = null;
 
     // Step through the list of detected tags and look for a matching tag
     List<AprilTagDetection> currentDetections = aprilTag.getDetections();
@@ -442,12 +446,17 @@ public class DriverControl extends OpMode {
       // Look to see if we have size info on this tag.
       if (detection.metadata != null) {
         //  Check to see if we want to track towards this tag.
-        if ((detection.id == 20 || detection.id == 24)) {
+        if (detection.id == 20) {
           // Yes, we want to use this tag.
-          targetFound = true;
-          desiredTag = detection;
+          blueTargetFound = true;
+          blueDesiredTag = detection;
           break;  // don't look any further.
-        } else {
+        }
+        if (detection.id == 24) {
+          redTargetFound = true;
+          redDesiredTag = detection;
+          break;
+        }else {
           // This tag is in the library, but we do not want to track it right now.
           telemetry.addData("Skipping", "Tag ID %d is not desired", detection.id);
         }
@@ -458,12 +467,12 @@ public class DriverControl extends OpMode {
     }
 
     // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-    if (gamepad1.left_bumper && targetFound) {
+    if (gamepad1.left_bumper && blueTargetFound) {
 
       // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
       //double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-      double  headingError    = desiredTag.ftcPose.bearing - BEARING_OFFSET;
-      telemetry.addData("bearing", desiredTag.ftcPose.bearing);
+      double  headingError    = blueDesiredTag.ftcPose.bearing - BEARING_OFFSET;
+      telemetry.addData("bearing", blueDesiredTag.ftcPose.bearing);
       telemetry.addData("bearing offset", BEARING_OFFSET);
       //double  yawError        = desiredTag.ftcPose.yaw;
 
@@ -473,7 +482,23 @@ public class DriverControl extends OpMode {
       //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
       telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-    } else {
+    }
+    if(gamepad1.right_bumper && redTargetFound) {
+      // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+      //double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+      double  headingError    = redDesiredTag.ftcPose.bearing + BEARING_OFFSET;
+      telemetry.addData("bearing", redDesiredTag.ftcPose.bearing);
+      telemetry.addData("bearing offset", BEARING_OFFSET);
+      //double  yawError        = desiredTag.ftcPose.yaw;
+
+      // Use the speed and turn "gains" to calculate how we want the robot to move.
+      //drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+      turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+      //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+      telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+
+    }else {
 
       // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
       drive  = -gamepad1.left_stick_y  ;  // Reduce drive rate to 50%.
@@ -512,6 +537,8 @@ public class DriverControl extends OpMode {
     telemetry.addData("close motors at velocity", r.outtake.launcherMotorsAtVelocityNear());
     telemetry.addData("near shooting state", nearShooterState);
     telemetry.addData("bearing error", BEARING_OFFSET);
+    telemetry.addData("blue tag detected state", blueTargetFound);
+    telemetry.addData("red tag detection data", redTargetFound);
     telemetry.update();
 
     TelemetryPacket packet = new TelemetryPacket();

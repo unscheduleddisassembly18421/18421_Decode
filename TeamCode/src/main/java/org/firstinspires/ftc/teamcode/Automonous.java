@@ -19,6 +19,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -109,7 +110,7 @@ public class Automonous extends LinearOpMode {
         // RED FAR
         TrajectoryActionBuilder redFarMoveToShootingPosition = r.drive.actionBuilder(redStartFar)
                 .lineToX(56)
-                .turnTo(Math.toRadians(155))
+                .turnTo(Math.toRadians(160))
                 .endTrajectory();
 
         TrajectoryActionBuilder redFarFirstPath = redFarMoveToShootingPosition.fresh()//firstPathFarRed
@@ -147,12 +148,12 @@ public class Automonous extends LinearOpMode {
 
         TrajectoryActionBuilder redNearSecondPath = redNearFirstPath.fresh()//secondPathNearRed
                 .strafeToLinearHeading(new Vector2d(12, 12),Math.toRadians(90))
-                .setTangent(Math.toRadians(90))
+//                    new TranslationalVelConstraint(40)
                 .lineToY(56)
                 .lineToY(12)
                 .setTangent(Math.toRadians(180))
                 .strafeToLinearHeading(new Vector2d(-12,12),Math.toRadians(145))
-                .endTrajectory();
+                .endTrajectory() ;
 
         TrajectoryActionBuilder redNearThirdPath = redNearSecondPath.fresh()//thirdPathNearRed
                 .strafeToLinearHeading(new Vector2d(36, 12), Math.toRadians(90))
@@ -173,14 +174,14 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(38, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-55)
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(55, -15,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(210)),Math.toRadians(210))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarSecondPath = blueFarFirstPath.fresh()//secondPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(53, -15,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(210)),Math.toRadians(210))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue
@@ -336,72 +337,114 @@ public class Automonous extends LinearOpMode {
         //Im pushing htis again
         else if (autoSelector == AutoSelector.RED_NEAR) {
             Actions.runBlocking(
-                    new SequentialAction(
+                    new ParallelAction(
+                            r.updateRotator(),
+                            new SequentialAction(
+                                    RedFarGoToShootingPosition,
+                                    nearShoot(),
+                                    new SleepAction(1),
+                                    new ParallelAction(
+                                            intake(),
+                                            RedNearMoveToShootingFirstPath
+                                    ),
 
                             new SleepAction(1),
-                            r.turnOnIntake(),
-                            RedNearMoveToShootingFirstPath,
-                            shoot(),
+
+                            nearShoot(),
+                            new SleepAction(1),
+
+                            new ParallelAction(
+                                    intake(),
+                                    RedNearMoveToShootingSecondPath
+                            ),
 
                             new SleepAction(1),
-                            r.turnOnIntake(),
-                            RedNearMoveToShootingSecondPath,
-                            shoot(),
 
+                            nearShoot(),
                             new SleepAction(1),
-                            r.turnOnIntake(),
-                            RedNearMoveToShootingThirdPath,
-                            shoot()
+                            new ParallelAction(
+                                    intake(),
+                                    RedNearMoveToShootingThirdPath
+                            ),
+                            new SleepAction(1),
+                            nearShoot()
 
-                    )
+                    ))
             );
 
         }
         else if (autoSelector == AutoSelector.BLUE_FAR) {
             Actions.runBlocking(
-                    new SequentialAction(
-                            BlueFarGoToShootingPosition,
-                            shoot(),
+                    new ParallelAction(
+                            r.updateRotator(),
+                            new SequentialAction(
+                                    //BlueFarGoToShootingPosition,
+                                    shoot(),
+                                    new SleepAction(1),
 
-                            new SleepAction(1),
-                            r.turnOnIntake(),
-                            BlueFarMoveToShootingFirstPath,
-                            shoot(),
+                                new ParallelAction(
 
-                            new SleepAction(1),
-                            r.turnOnIntake(),
-                            BlueFarMoveToShootingSecondPath,
-                            shoot(),
+                                        BlueFarMoveToShootingFirstPath,
+                                        shoot()
+                                ),
 
-                            new SleepAction(1),
-                            r.turnOnIntake(),
-                            BlueFarMoveToShootingThirdPath,
-                            shoot()
-                    )
-            );
+
+                                    new SleepAction(1),
+
+                                new ParallelAction(
+                                    intake(),
+                                    BlueFarMoveToShootingSecondPath
+                                ),
+                                new SleepAction(1),
+                                shoot(),
+
+                                new SleepAction(1),
+
+                                new ParallelAction(
+                                        intake(),
+                                        BlueFarMoveToShootingThirdPath
+                                ),
+                                new SleepAction(1),
+                                shoot()
+                            )
+            ));
 
 
         }
         else if (autoSelector == AutoSelector.BLUE_NEAR){
             Actions.runBlocking(
-                    new SequentialAction(
+                    new ParallelAction(
+                            r.updateRotator(),
+                            new SequentialAction(
+                                    BlueFarGoToShootingPosition,
+                                    nearShoot(),
+                                    new SleepAction(1),
+                                    new ParallelAction(
+                                           intake(),
+                                           BlueFarMoveToShootingFirstPath
+                                    ),
 
                             new SleepAction(1),
-                            r.turnOnIntake(),
-                            RedNearMoveToShootingFirstPath,
-                            shoot(),
+                            nearShoot(),
 
                             new SleepAction(1),
-                            r.turnOnIntake(),
-                            BlueNearMoveToShootingSecondPath,
-                            shoot(),
+
+                            new ParallelAction(
+                                    intake(),
+                                    BlueNearMoveToShootingSecondPath
+                            ),
 
                             new SleepAction(1),
-                            r.turnOnIntake(),
-                            BlueNearMoveToShootingThirdPath,
-                            shoot()
-                    )
-            );
+                            nearShoot(),
+                            new SleepAction(1),
+
+                            new ParallelAction(
+                                    intake(),
+                                    BlueNearMoveToShootingThirdPath
+                            ),
+                            new SleepAction(1),
+                            nearShoot()
+                    )));
 
         }else
             r.drive.localizer.setPose(blueStartNear);
@@ -416,23 +459,47 @@ public class Automonous extends LinearOpMode {
                 r.turnToSecondAngle(),
                 r.activateShooter(),
                 r.openHoodServo(),
-                new SleepAction(0.5),
+                new SleepAction(0.6),
                 r.turnElavatorMotorOn(),
                 r.checkShooterVelocity(),
                 r.turnToFirstShootingAngle(),
-                new SleepAction(0.45), //.45
+                new SleepAction(0.4), //.45
                 r.checkShooterVelocity(),
                 r.turnToThirdShootingAngle(),
-                new SleepAction(0.45),
+                new SleepAction(0.4),
                 r.checkShooterVelocity(),
                 r.turnToSecondShootingAngle(),
-                new SleepAction(0.45),
+                new SleepAction(0.4),
                 r.checkShooterVelocity(),
-                r.turnOffShooter(),
+                //r.turnOffShooter(),
                 new SleepAction(0.5),
                 r.turnElavatorMotorOff(),
-                r.closeHoodServo(),
-                new SleepAction(0.3)
+                r.closeHoodServo()
+        );
+    }
+
+    public Action nearShoot(){
+        return new SequentialAction(
+                r.turnToSecondAngle(),
+                r.activateShooterNear(),
+                r.openHoodServoNear(),
+                new SleepAction(0.4),
+                r.turnElavatorMotorOn(),
+                r.checkShooterVelocityNear(),
+                r.turnToFirstShootingAngle(),
+                new SleepAction(0.4), //.45
+                r.checkShooterVelocityNear(),
+                r.turnToThirdShootingAngle(),
+                new SleepAction(0.4),
+                r.checkShooterVelocity(),
+                r.turnToSecondShootingAngle(),
+                new SleepAction(0.4),
+                r.checkShooterVelocityNear(),
+                //r.turnOffShooter(),
+                new SleepAction(0.5),
+                r.turnElavatorMotorOff(),
+                r.closeHoodServo()
+
         );
     }
     

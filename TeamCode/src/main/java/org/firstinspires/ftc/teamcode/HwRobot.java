@@ -36,12 +36,20 @@ public class HwRobot {
         return outtake.activateShooter();
     }
 
+    public Action activateShooterNear(){
+        return outtake.activateShooterNear();
+    }
+
     public Action turnOffShooter(){
         return outtake.turnOffShooter();
     }
 
     public Action checkShooterVelocity(){
         return outtake.checkShooterVelocity();
+    }
+
+    public Action checkShooterVelocityNear(){
+        return outtake.checkShooterVelocityNear();
     }
 
     public Action turnElavatorMotorOn(){
@@ -58,6 +66,10 @@ public class HwRobot {
 
     public Action closeHoodServo(){
         return outtake.closeHoodServo();
+    }
+
+    public Action openHoodServoNear(){
+       return outtake.openHoodServoNear();
     }
 
 

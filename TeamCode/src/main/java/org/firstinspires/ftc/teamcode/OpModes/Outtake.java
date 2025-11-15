@@ -28,9 +28,9 @@ public class Outtake {
     //Positions
     public static double HOODSERVO_START_POSITION  = 0;
     public static double HOODSERVO_SHOOT_POSITION = 0.1;
-    public static double HOODSERVO_CLOSE_SHOOT_POSITION = 0.655;
-    public static double FAR_LAUNCHERMOTOR_VELOCITY_ON = 1660;//max is around 2700
-    public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1600;//test
+    public static double HOODSERVO_CLOSE_SHOOT_POSITION = 0.05;
+    public static double FAR_LAUNCHERMOTOR_VELOCITY_ON = 2120;//max is around 2700
+    public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1675;//test
     public static double ELAVATORMOTOR_POWER_ON = 1;
     public static double LAUNCHER_TOLERANCE = 0.995;
     public static double AUTO_LAUNCHERMOTOR_VELOCITY_ON = 1605;
@@ -154,6 +154,20 @@ public class Outtake {
         return new ActivateShooter();
     }
 
+    public class ActivateShooterNear implements Action {
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            launcherMotor1OnNear();
+            launcherMotor2OnNear();
+            return false;
+        }
+    }
+
+    public Action activateShooterNear(){
+        return new ActivateShooterNear();
+    }
+
     public class TurnOffShooter implements Action{
 
         @Override
@@ -177,6 +191,17 @@ public class Outtake {
     }
     public Action checkShooterVelocity(){
         return new CheckShooterVelocity();
+    }
+
+    public class CheckShooterVelocityNear implements Action{
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            return !launcherMotorsAtVelocityNear();
+        }
+    }
+    public Action checkShooterVelocityNear(){
+        return new CheckShooterVelocityNear();
     }
 
 
@@ -228,5 +253,19 @@ public class Outtake {
     public Action closeHoodServo(){
         return new CloseHoodServo();
     }
+
+    public class OpenHoodServoNear implements Action{
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            hoodServoShootNear();
+            return false;
+        }
+    }
+    public Action openHoodServoNear(){
+        return new OpenHoodServoNear();
+    }
+
+
 
 }

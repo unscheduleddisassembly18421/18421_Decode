@@ -185,9 +185,9 @@ public class Automonous extends LinearOpMode {
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue
-                .splineToLinearHeading(new Pose2d(-12, -55,Math.toRadians(270)),Math.toRadians(270))
-                .setTangent(210)
-                .splineToLinearHeading(new Pose2d(53, -15,Math.toRadians(210)),Math.toRadians(210))
+                .splineToLinearHeading(new Pose2d(-10, -38,Math.toRadians(270)),Math.toRadians(270))
+                .lineToY(-55)
+                .splineToLinearHeading(new Pose2d(55, -15,Math.toRadians(205)),Math.toRadians(205))
                 .endTrajectory();
 
         //BLUE NEAR

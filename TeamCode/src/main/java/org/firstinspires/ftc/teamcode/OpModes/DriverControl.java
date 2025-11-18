@@ -63,7 +63,6 @@ import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.HwRobot;
-import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -130,12 +129,9 @@ public class DriverControl extends OpMode {
   public static double power = 0;
 
   public enum ShooterState {
-    READY, FIRE1, FIRE2, FIRE3, RELOAD
+    READY, FARFIRE1, FARFIRE2, FARFIRE3, NEARFIRE1, NEARFIRE2, NEARFIRE3, RELOAD
   }
 
-  public enum NearShooterState {
-    READY, FIRE1, FIRE2, FIRE3, RELOAD
-  }
 
   public enum IntakeState {
     READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
@@ -147,7 +143,6 @@ public class DriverControl extends OpMode {
 
   ShooterState shooterState = ShooterState.READY;
   IntakeState intakeState = IntakeState.READY;
-  NearShooterState nearShooterState = NearShooterState.READY;
   GreenPosition greenPosition;
 
   public ElapsedTime shooterClock = new ElapsedTime();
@@ -217,27 +212,36 @@ public class DriverControl extends OpMode {
     switch(shooterState) {
       case READY:
         //outtake.r.elavatorMotorOff();
-        if (g2.right_bumper && !previousG1.right_bumper) {
+        if (g2.right_bumper && !previousG2.right_bumper) {
           r.outtake.launcherMotor2OnFar();
           r.outtake.launcherMotor1OnFar();
           r.outtake.hoodServoShootFar();
           r.outtake.elavatorMotorON();
           //rotator.setPosition(firstAngle);
-          shooterState = ShooterState.FIRE1;
+          shooterState = ShooterState.FARFIRE1;
+        }
+
+        if(g2.y && !previousG2.y){
+          r.outtake.launcherMotor1OnNear();
+          r.outtake.launcherMotor2OnNear();
+          r.outtake.hoodServoShootNear();
+          r.outtake.elavatorMotorON();
+          shooterState = ShooterState.NEARFIRE1;
+          shooterClock.reset();
         }
         break;
 
-      case FIRE1:
+      case FARFIRE1:
 
         if (r.outtake.launchMotorsAtVelocity()) {
           r.rotator.setPosition(firstShootingAngle);
           r.outtake.elavatorMotorON();
           shooterClock.reset();
-          shooterState = ShooterState.FIRE2;
+          shooterState = ShooterState.FARFIRE2;
         }
         break;
 
-      case FIRE2:
+      case FARFIRE2:
         //if (!outtake.launchMotorsAtVelocity()) {
           //outtake.r.elavatorMotorOff();
         //}
@@ -246,11 +250,11 @@ public class DriverControl extends OpMode {
           r.rotator.setPosition(thirdShootingAngle);
           //outtake.r.elavatorMotorON();
           shooterClock.reset();
-          shooterState = ShooterState.FIRE3;
+          shooterState = ShooterState.FARFIRE3;
         }
         break;
 
-      case FIRE3:
+      case FARFIRE3:
 
         //if (!outtake.launchMotorsAtVelocity()) {
           //outtake.r.elavatorMotorOff();
@@ -264,8 +268,34 @@ public class DriverControl extends OpMode {
         }
           break;
 
-          case RELOAD:
-            if (r.outtake.launchMotorsAtVelocity() && shooterClock.milliseconds() > RELOAD_DELAY) {
+      case NEARFIRE1:
+        if(r.outtake.launcherMotorsAtVelocityNear()){
+          r.rotator.setPosition(firstShootingAngle);
+          shooterClock.reset();
+          shooterState = ShooterState.NEARFIRE2;
+        }
+        break;
+
+      case NEARFIRE2:
+        if(r.outtake.launcherMotorsAtVelocityNear() && shooterClock.milliseconds() > SHOOTER_DELAY){
+          r.rotator.setPosition(thirdShootingAngle);
+          shooterClock.reset();
+          shooterState = ShooterState.NEARFIRE3;
+        }
+
+        break;
+
+      case NEARFIRE3:
+        if(r.outtake.launcherMotorsAtVelocityNear() && shooterClock.milliseconds() > SHOOTER_DELAY){
+          r.rotator.setPosition(secondShootingAngle);
+          shooterClock.reset();
+          shooterState = ShooterState.RELOAD;
+        }
+
+        break;
+
+        case RELOAD:
+            if (shooterClock.milliseconds() > RELOAD_DELAY) {
               r.outtake.elavatorMotorOff();
               r.outtake.launcherMotor1Off();
               r.outtake.launcherMotor2Off();
@@ -275,70 +305,12 @@ public class DriverControl extends OpMode {
               shooterState = ShooterState.READY;
             }
             break;
-        }
-
-    switch(nearShooterState) {
-      case READY:
-        //outtake.r.elavatorMotorOff();
-        if (g2.y && !previousG2.y) {
-          r.outtake.launcherMotor2OnNear();
-          r.outtake.launcherMotor1OnNear();
-          r.outtake.hoodServoShootNear();
-          r.outtake.elavatorMotorON();
-          //rotator.setPosition(firstAngle);
-          shooterState = ShooterState.FIRE1;
-          shooterClock.reset();
-        }
-        break;
-
-      case FIRE1:
-
-        if (r.outtake.launcherMotorsAtVelocityNear()) {
-          r.rotator.setPosition(firstShootingAngle);
-          shooterClock.reset();
-          shooterState = ShooterState.FIRE2;
-        }
-        break;
-
-      case FIRE2:
-        //if (!outtake.launchMotorsAtVelocity()) {
-        //outtake.r.elavatorMotorOff();
-        //}
-
-        if (r.outtake.launcherMotorsAtVelocityNear() && shooterClock.milliseconds() > SHOOTER_DELAY) {
-          r.rotator.setPosition(thirdShootingAngle);
-          //outtake.r.elavatorMotorON();
-          shooterClock.reset();
-          shooterState = ShooterState.FIRE3;
-        }
-        break;
-
-      case FIRE3:
-
-        //if (!outtake.launchMotorsAtVelocity()) {
-        //outtake.r.elavatorMotorOff();
-        //}
-
-        if (r.outtake.launcherMotorsAtVelocityNear() && shooterClock.milliseconds() > SHOOTER_DELAY) {
-          r.rotator.setPosition(secondShootingAngle);
-          //outtake.r.elavatorMotorON();
-          shooterClock.reset();
-          shooterState = ShooterState.RELOAD;
-        }
-        break;
-
-      case RELOAD:
-        if (r.outtake.launcherMotorsAtVelocityNear() && shooterClock.milliseconds() > NEAR_RELOAD_DELAY) {
-          r.outtake.elavatorMotorOff();
-          r.outtake.launcherMotor1Off();
-          r.outtake.launcherMotor2Off();
-          r.outtake.hoodServoStart();
-          r.rotator.setPosition(firstAngle);
-          intakeState = IntakeState.READY;
-          nearShooterState = NearShooterState.READY;
-        }
-        break;
     }
+
+
+
+
+
 
 
     switch (intakeState){
@@ -403,13 +375,12 @@ public class DriverControl extends OpMode {
           r.rotator.rightLightGreen();
           shooterState = ShooterState.READY;
           intakeState = IntakeState.FIRING;
-          nearShooterState = NearShooterState.READY;
         }
 
         break;
 
       case FIRING:
-        if (shooterState == ShooterState.RELOAD || nearShooterState == NearShooterState.RELOAD){
+        if (shooterState == ShooterState.RELOAD ){
           intakeState = IntakeState.READY;
         }
 
@@ -539,7 +510,6 @@ public class DriverControl extends OpMode {
     telemetry.addData("ball detected", r.rotator.detectedBall());
     telemetry.addData("green Position", greenPosition);
     telemetry.addData("close motors at velocity", r.outtake.launcherMotorsAtVelocityNear());
-    telemetry.addData("near shooting state", nearShooterState);
     telemetry.addData("bearing error", RED_BEARING_OFFSET);
     telemetry.addData("blue tag detected state", blueTargetFound);
     telemetry.addData("red tag detection data", redTargetFound);

@@ -13,7 +13,7 @@ public class Variables {
     public static double indexingAngle = 107;
 
     public static double SHOOTER_DELAY = 500;
-    public static double RELOAD_DELAY = 1000;
+    public static double RELOAD_DELAY = 500;
 
     public static double INTAKE_DELAY = 310;
     public static double INTAKE_OFF_DELAY = 600;

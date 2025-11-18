@@ -56,7 +56,7 @@ public class Outtake {
         //hoodServo2.setDirection(Servo.Direction.REVERSE);
 
         liftServo1.setDirection(Servo.Direction.FORWARD);
-        liftServo2.setDirection(Servo.Direction.FORWARD);
+        liftServo2.setDirection(Servo.Direction.REVERSE);
 
         launcherMotor1.setDirection(DcMotor.Direction.FORWARD);
         launcherMotor2.setDirection(DcMotor.Direction.FORWARD);

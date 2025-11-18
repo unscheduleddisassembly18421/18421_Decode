@@ -63,6 +63,7 @@ import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.teamcode.Drawing;
 import org.firstinspires.ftc.teamcode.HwRobot;
+import org.firstinspires.ftc.teamcode.R;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.VisionProcessor;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -83,7 +84,8 @@ public class DriverControl extends OpMode {
   //test
   public HwRobot r = null;
   private ElapsedTime runtime = new ElapsedTime();
-
+  public static double headingErrorBlue = 0;
+  public static double headingErrorRed = 0;
 
   private static final boolean USE_WEBCAM = true;  // Set true to use a webcam, or false for a phone camera
   private static final int DESIRED_TAG_ID = -1;     // Choose the tag you want to approach or set to -1 for ANY tag.
@@ -98,7 +100,7 @@ public class DriverControl extends OpMode {
 
   final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
   final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
-  public static double TURN_GAIN   =  0.095  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+  public static double TURN_GAIN   =  0.0675  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
   final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
   final double MAX_AUTO_STRAFE= 0.5;   //  Clip the strafing speed to this max value (adjust for your robot)
@@ -108,7 +110,8 @@ public class DriverControl extends OpMode {
   double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
   double  turn            = 0;
 
-  public static double BEARING_OFFSET = 10;
+  public static double RED_BEARING_OFFSET = 5;
+  public static double BLUE_BEARING_OFFSET = 1;
 
   Gamepad g1 = new Gamepad();
   Gamepad g2 = new Gamepad();
@@ -210,10 +213,6 @@ public class DriverControl extends OpMode {
       r.rotator.setPosition(thirdAngle);
     }
 
-    if(g2.dpad_down && !previousG2.dpad_down){
-      r.outtake.liftServoLift();
-    }
-
 
     switch(shooterState) {
       case READY:
@@ -294,9 +293,8 @@ public class DriverControl extends OpMode {
 
       case FIRE1:
 
-        if (r.outtake.launchMotorsAtVelocity()) {
+        if (r.outtake.launcherMotorsAtVelocityNear()) {
           r.rotator.setPosition(firstShootingAngle);
-          r.outtake.elavatorMotorON();
           shooterClock.reset();
           shooterState = ShooterState.FIRE2;
         }
@@ -455,7 +453,7 @@ public class DriverControl extends OpMode {
           blueDesiredTag = detection;
           break;  // don't look any further.
         }
-        if (detection.id == 24) {
+        else if (detection.id == 24) {
           redTargetFound = true;
           redDesiredTag = detection;
           break;
@@ -470,38 +468,41 @@ public class DriverControl extends OpMode {
     }
 
     // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
-    if (gamepad1.left_bumper && blueTargetFound) {
+    if (gamepad1.left_bumper && (blueTargetFound || redTargetFound)) {
+      if (blueTargetFound) {
+        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+        //double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+        double headingError = blueDesiredTag.ftcPose.bearing + BLUE_BEARING_OFFSET;
+        telemetry.addData("bearing", headingError);
+        telemetry.addData("bearing offset", BLUE_BEARING_OFFSET);
+        headingErrorBlue = blueDesiredTag.ftcPose.bearing + BLUE_BEARING_OFFSET;
+        //double  yawError        = desiredTag.ftcPose.yaw;
 
-      // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-      //double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-      double  headingError    = blueDesiredTag.ftcPose.bearing - BEARING_OFFSET;
-      telemetry.addData("bearing", blueDesiredTag.ftcPose.bearing);
-      telemetry.addData("bearing offset", BEARING_OFFSET);
-      //double  yawError        = desiredTag.ftcPose.yaw;
+        // Use the speed and turn "gains" to calculate how we want the robot to move.
+        //drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+        turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+        //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
-      // Use the speed and turn "gains" to calculate how we want the robot to move.
-      //drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-      turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-      //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+        telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+      }
+      else if(redTargetFound){
+        // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
+        //double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
+        double headingError = redDesiredTag.ftcPose.bearing - RED_BEARING_OFFSET;
+        telemetry.addData("bearing", headingError);
+        telemetry.addData("bearing offset", RED_BEARING_OFFSET);
+        headingErrorRed = redDesiredTag.ftcPose.bearing - RED_BEARING_OFFSET;
+        //double  yawError        = desiredTag.ftcPose.yaw;
 
-      telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+        // Use the speed and turn "gains" to calculate how we want the robot to move.
+        //drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+        turn = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN);
+        //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+
+        telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+      }
     }
-    if(gamepad1.right_bumper && redTargetFound) {
-      // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
-      //double  rangeError      = (desiredTag.ftcPose.range - DESIRED_DISTANCE);
-      double  headingError    = redDesiredTag.ftcPose.bearing + BEARING_OFFSET;
-      telemetry.addData("bearing", redDesiredTag.ftcPose.bearing);
-      telemetry.addData("bearing offset", BEARING_OFFSET);
-      //double  yawError        = desiredTag.ftcPose.yaw;
-
-      // Use the speed and turn "gains" to calculate how we want the robot to move.
-      //drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-      turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-      //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-
-      telemetry.addData("Auto","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
-
-    }else {
+    else {
 
       // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
       drive  = -gamepad1.left_stick_y  ;  // Reduce drive rate to 50%.
@@ -539,9 +540,11 @@ public class DriverControl extends OpMode {
     telemetry.addData("green Position", greenPosition);
     telemetry.addData("close motors at velocity", r.outtake.launcherMotorsAtVelocityNear());
     telemetry.addData("near shooting state", nearShooterState);
-    telemetry.addData("bearing error", BEARING_OFFSET);
+    telemetry.addData("bearing error", RED_BEARING_OFFSET);
     telemetry.addData("blue tag detected state", blueTargetFound);
     telemetry.addData("red tag detection data", redTargetFound);
+    telemetry.addData("blue heading error", headingErrorBlue);
+    telemetry.addData("red heading error", headingErrorRed);
     telemetry.update();
 
     TelemetryPacket packet = new TelemetryPacket();

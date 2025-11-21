@@ -219,11 +219,13 @@ public class DriverControl extends OpMode {
           r.outtake.launcherMotor1OnFar();
           r.outtake.hoodServoShootFar();
           r.outtake.elavatorMotorON();
+          r.outtake.launcherMotor2OnFar();
+          r.outtake.launcherMotor1OnNear();
           //rotator.setPosition(firstAngle);
           shooterState = ShooterState.FARFIRE1;
         }
 
-        if(g2.y && !previousG2.y){
+        if(g2.y && !previousG2.y && intakeState == IntakeState.FIRING){
           r.outtake.launcherMotor1OnNear();
           r.outtake.launcherMotor2OnNear();
           r.outtake.hoodServoShootNear();

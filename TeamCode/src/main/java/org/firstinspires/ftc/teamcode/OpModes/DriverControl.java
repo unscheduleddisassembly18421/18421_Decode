@@ -215,12 +215,15 @@ public class DriverControl extends OpMode {
       case READY:
         //outtake.r.elavatorMotorOff();
         if (g2.right_bumper && !previousG2.right_bumper && intakeState == IntakeState.FIRING) {
-          r.outtake.launcherMotor2OnFar();
-          r.outtake.launcherMotor1OnFar();
-          r.outtake.hoodServoShootFar();
           r.outtake.elavatorMotorON();
+//          r.outtake.launcherMotor1Off();
+//          r.outtake.launcherMotor2Off();
+//          r.outtake.launcherMotor2OnFar();
+//          r.outtake.launcherMotor1OnFar();
+//          r.outtake.launcherMotor2OnFar();
+          r.outtake.launcherMotor1OnFar();
           r.outtake.launcherMotor2OnFar();
-          r.outtake.launcherMotor1OnNear();
+          r.outtake.hoodServoShootFar();
           //rotator.setPosition(firstAngle);
           shooterState = ShooterState.FARFIRE1;
         }
@@ -389,8 +392,8 @@ public class DriverControl extends OpMode {
           intakeState = IntakeState.READY;
         }
 
-        r.outtake.launcherMotor1OnNear();
-        r.outtake.launcherMotor2OnNear();
+//        r.outtake.launcherMotor1OnNear();
+//        r.outtake.launcherMotor2OnNear();
 
         if(g2.b){
           r.intake.intakeMotorForward();

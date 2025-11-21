@@ -58,7 +58,7 @@ public class Rotator {
 
     public static double GREEN_COLOR = 0.5;
     public static double RED_COLOR = 0.28;
-    public static double NEW_COLOR = 0.78;
+    public static double BLUE_COLOR = 0.62;
 
     private AnalogInput ai = null;
 
@@ -146,7 +146,7 @@ public class Rotator {
 
     //indicator light stuff
     public void leftLightNewColor(){
-        leftLight.setPosition(NEW_COLOR);
+        leftLight.setPosition(BLUE_COLOR);
     }
 
     public void leftLightRed(){

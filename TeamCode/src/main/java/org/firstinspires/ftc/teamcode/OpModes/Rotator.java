@@ -236,23 +236,28 @@ public class Rotator {
     }
 
     public class WaitForBall implements Action {
+        //instance variables
         private ElapsedTime clock = null;
+        private double delayTime = 0;
+        public WaitForBall(double d){
+            clock = new ElapsedTime();
+            delayTime = d;
+        }
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            if (clock == null){
-                clock = new ElapsedTime();
+            if(clock.milliseconds() > delayTime){
+                return false;
             }
-            if(clock.milliseconds() > CLOCK_DELAY){
+            else if(detectedBall()){
                 return false;
-            }else if(detectedBall()){
-                return false;
-            }else {
+            }
+            else {
                 return true;
             }
         }
     }
-    public Action waitForBall(){
-        return new WaitForBall();
+    public Action waitForBall(double d){
+        return new WaitForBall(d);
     }
 
     public class UpdateRotator implements Action{

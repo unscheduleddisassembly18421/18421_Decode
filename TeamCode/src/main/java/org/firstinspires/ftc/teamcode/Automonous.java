@@ -37,6 +37,10 @@ public class Automonous extends LinearOpMode {
     public static double SHOOTING_DELAY = 0.45;
     public static double SELECTOR_DELAY_TIME = 0.4;
 
+    public static double NEAR_DELAY = 5000;
+    public static double MIDDLE_DELAY = 12000;
+    public static double FAR_DELAY = 20000;
+
     public enum IntakeState {
         READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
     }
@@ -322,21 +326,21 @@ public class Automonous extends LinearOpMode {
                                 new SleepAction(0.15),
                                 new ParallelAction(
                                     RedFarMoveToShootingFirstPath,
-                                    intake()
+                                    intake(NEAR_DELAY)
                                 ),
                                 shoot(),
 
                                 new SleepAction(0.15),
                                 new ParallelAction(
                                         RedFarMoveToShootingSecondPath,
-                                        intake()
+                                        intake(MIDDLE_DELAY)
                                 ),
                                  shoot(),
 
                                new SleepAction(0.15),
                                 new ParallelAction(
                                         RedFarMoveToShootingThirdPath,
-                                        intake()
+                                        intake(FAR_DELAY)
                               ),
                                shoot(),
                                   RedFarMoveToShootingThirdPathEnd
@@ -355,7 +359,7 @@ public class Automonous extends LinearOpMode {
                             r.updateRotator(),
                             new SequentialAction(
                                     new ParallelAction(
-                                            intake(),
+                                            intake(NEAR_DELAY),
                                             RedNearMoveToShootingFirstPath
                                     ),
 
@@ -365,7 +369,7 @@ public class Automonous extends LinearOpMode {
                             new SleepAction(1),
 
                             new ParallelAction(
-                                    intake(),
+                                    intake(MIDDLE_DELAY),
                                     RedNearMoveToShootingSecondPath
                             ),
 
@@ -374,7 +378,7 @@ public class Automonous extends LinearOpMode {
                             nearShoot(),
                             new SleepAction(1),
                             new ParallelAction(
-                                    intake(),
+                                    intake(FAR_DELAY),
                                     RedNearMoveToShootingThirdPath
                             ),
                             new SleepAction(1),
@@ -395,14 +399,14 @@ public class Automonous extends LinearOpMode {
 
                                 new ParallelAction(
                                         BlueFarMoveToShootingFirstPath,
-                                        intake()
+                                        intake(NEAR_DELAY)
                                 ),
 
                                     shoot(),
                                     new SleepAction(1),
 
                                 new ParallelAction(
-                                    intake(),
+                                    intake(MIDDLE_DELAY),
                                     BlueFarMoveToShootingSecondPath
                                 ),
                                 new SleepAction(1),
@@ -411,7 +415,7 @@ public class Automonous extends LinearOpMode {
                                 new SleepAction(1),
 
                                 new ParallelAction(
-                                        intake(),
+                                        intake(FAR_DELAY),
                                         BlueFarMoveToShootingThirdPath
                                 ),
                                 new SleepAction(1),
@@ -428,7 +432,7 @@ public class Automonous extends LinearOpMode {
                             new SequentialAction(
                                     new SleepAction(1),
                                     new ParallelAction(
-                                           intake(),
+                                           intake(NEAR_DELAY),
                                            BlueFarMoveToShootingFirstPath
                                     ),
 
@@ -438,7 +442,7 @@ public class Automonous extends LinearOpMode {
                             new SleepAction(1),
 
                             new ParallelAction(
-                                    intake(),
+                                    intake(MIDDLE_DELAY),
                                     BlueNearMoveToShootingSecondPath
                             ),
 
@@ -447,7 +451,7 @@ public class Automonous extends LinearOpMode {
                             new SleepAction(1),
 
                             new ParallelAction(
-                                    intake(),
+                                    intake(FAR_DELAY),
                                     BlueNearMoveToShootingThirdPath
                             ),
                             new SleepAction(1),
@@ -511,20 +515,20 @@ public class Automonous extends LinearOpMode {
         );
     }
     
-    public Action intake(){
+    public Action intake(double d){
         return new SequentialAction(
                 r.turnOnIntake(),
                 r.turnToFirstAngle(),
                 new SleepAction(0.2),
-                r.waitForBall(),
+                r.waitForBall(d),
                 new SleepAction(0.2),
                 r.turnToThirdAngle(),
                 new SleepAction(0.2),
-                r.waitForBall(),
+                r.waitForBall(d),
                 new SleepAction(0.2),
                 r.turnToSecondAngle(),
                 new SleepAction(0.2),
-                r.waitForBall(),
+                r.waitForBall(d),
                 new SleepAction(0.75),
                 r.turnOffIntake(),
                 r.reverseIntake(),

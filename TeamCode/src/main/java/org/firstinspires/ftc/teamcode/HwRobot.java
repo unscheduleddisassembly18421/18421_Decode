@@ -105,8 +105,8 @@ public class HwRobot {
         return intake.turnOffIntake();
     }
 
-    public Action waitForBall() {
-        return rotator.waitForBall();
+    public Action waitForBall(double d) {
+        return rotator.waitForBall(d);
     }
 
     public Action updateRotator(){

@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -35,6 +36,8 @@ public class Rotator {
     public static double kp = 0.005;
     public static double kd = 0;
     public static double ki = 0;
+
+    public static double CLOCK_DELAY = 2000;
 
 
     public static double intakeTolerance = 6;
@@ -55,6 +58,7 @@ public class Rotator {
 
     public static double GREEN_COLOR = 0.5;
     public static double RED_COLOR = 0.28;
+    public static double NEW_COLOR = 0.78;
 
     private AnalogInput ai = null;
 
@@ -141,8 +145,8 @@ public class Rotator {
     }
 
     //indicator light stuff
-    public void leftLightGreen(){
-        leftLight.setPosition(GREEN_COLOR);
+    public void leftLightNewColor(){
+        leftLight.setPosition(NEW_COLOR);
     }
 
     public void leftLightRed(){
@@ -232,10 +236,19 @@ public class Rotator {
     }
 
     public class WaitForBall implements Action {
-
+        private ElapsedTime clock = null;
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            return  !detectedBall();
+            if (clock == null){
+                clock = new ElapsedTime();
+            }
+            if(clock.milliseconds() > CLOCK_DELAY){
+                return false;
+            }else if(detectedBall()){
+                return false;
+            }else {
+                return true;
+            }
         }
     }
     public Action waitForBall(){

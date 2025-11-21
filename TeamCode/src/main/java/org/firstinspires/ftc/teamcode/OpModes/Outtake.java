@@ -35,7 +35,7 @@ public class Outtake {
     public static double CLOSE_LAUNCHERMOTOR_VELOCITY_ON = 1675;//test
     public static double ELAVATORMOTOR_POWER_ON = 1;
     public static double LAUNCHER_TOLERANCE = 0.995;
-    public static double AUTO_LAUNCHERMOTOR_VELOCITY_ON = 1975;
+    public static double AUTO_LAUNCHERMOTOR_VELOCITY_ON = 1995;
     public static double AUTO_HOODSERVO_SHOOT = 0.455;
     public static double LIFTSERVO_LIFT_POSITION = 0.35;
 

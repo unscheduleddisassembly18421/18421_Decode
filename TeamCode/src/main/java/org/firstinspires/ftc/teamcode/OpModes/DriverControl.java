@@ -176,7 +176,6 @@ public class DriverControl extends OpMode {
 
   @Override
   public void start() {
-
     runtime.reset();
     shooterClock.reset();
     intakeClock.reset();
@@ -192,6 +191,9 @@ public class DriverControl extends OpMode {
     previousG1.copy(g1);
     g1.copy(gamepad1);
     g2.copy(gamepad2);
+
+    //r.outtake.launcherMotor1OnFar();
+    //r.outtake.launcherMotor2OnFar();
 
 
     telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -212,7 +214,7 @@ public class DriverControl extends OpMode {
     switch(shooterState) {
       case READY:
         //outtake.r.elavatorMotorOff();
-        if (g2.right_bumper && !previousG2.right_bumper) {
+        if (g2.right_bumper && !previousG2.right_bumper && intakeState == IntakeState.FIRING) {
           r.outtake.launcherMotor2OnFar();
           r.outtake.launcherMotor1OnFar();
           r.outtake.hoodServoShootFar();
@@ -371,7 +373,6 @@ public class DriverControl extends OpMode {
       case FULL:
         if(intakeClock.milliseconds() > INTAKE_OFF_DELAY) {
           r.intake.intakeMotorOff();
-          r.rotator.leftLightGreen();
           r.rotator.rightLightGreen();
           shooterState = ShooterState.READY;
           intakeState = IntakeState.FIRING;
@@ -381,8 +382,13 @@ public class DriverControl extends OpMode {
 
       case FIRING:
         if (shooterState == ShooterState.RELOAD ){
+//          r.outtake.launcherMotor1OnFar();
+//          r.outtake.launcherMotor2OnFar();
           intakeState = IntakeState.READY;
         }
+
+        r.outtake.launcherMotor1OnNear();
+        r.outtake.launcherMotor2OnNear();
 
         if(g2.b){
           r.intake.intakeMotorForward();
@@ -455,6 +461,7 @@ public class DriverControl extends OpMode {
         //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
         telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+        r.rotator.leftLightNewColor();
       }
       else if(redTargetFound){
         // Determine heading, range and Yaw (tag image rotation) error so we can use them to control the robot automatically.
@@ -471,6 +478,7 @@ public class DriverControl extends OpMode {
         //strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
 
         telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
+        r.rotator.leftLightNewColor();
       }
     }
     else {

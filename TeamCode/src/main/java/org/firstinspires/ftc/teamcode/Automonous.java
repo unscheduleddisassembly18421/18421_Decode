@@ -37,9 +37,9 @@ public class Automonous extends LinearOpMode {
     public static double SHOOTING_DELAY = 0.45;
     public static double SELECTOR_DELAY_TIME = 0.4;
 
-    public static double NEAR_DELAY = 5000;
-    public static double MIDDLE_DELAY = 12000;
-    public static double FAR_DELAY = 20000;
+    public static double NEAR_DELAY = 10000;
+    public static double MIDDLE_DELAY = 16500;
+    public static double FAR_DELAY = 25000;
 
     public enum IntakeState {
         READY, INTAKE1, INTAKE2, INTAKE3, FULL, FIRING
@@ -119,9 +119,9 @@ public class Automonous extends LinearOpMode {
 
         TrajectoryActionBuilder redFarFirstPath = redFarMoveToShootingPosition.fresh()//firstPathFarRed
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(38, 35,Math.toRadians(90)),
+                .splineToLinearHeading(new Pose2d(36, 30,Math.toRadians(90)),
                         Math.toRadians(90))
-                .lineToY(55,  new TranslationalVelConstraint(55))
+                .lineToY(55,  new TranslationalVelConstraint(25))
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(55, 15,Math.toRadians(158)),Math.toRadians(0))
                 .endTrajectory();
@@ -129,8 +129,8 @@ public class Automonous extends LinearOpMode {
 
         TrajectoryActionBuilder redFarSecondPath = redFarFirstPath.fresh()//secondPathFarRed
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(13,35, Math.toRadians(90)), Math.toRadians(90))//13,35,90
-                .lineToY(50, new TranslationalVelConstraint(55))
+                .splineToLinearHeading(new Pose2d(13,30, Math.toRadians(90)), Math.toRadians(90))//13,35,90
+                .lineToY(52, new TranslationalVelConstraint(15))
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(55, 12,Math.toRadians(155)),Math.toRadians(0)
                 )
@@ -139,10 +139,11 @@ public class Automonous extends LinearOpMode {
 
         TrajectoryActionBuilder redFarThirdPath = redFarSecondPath.fresh()//thirdPathFarRed
                 .setTangent(Math.toRadians(180))
-                .splineToLinearHeading(new Pose2d(-10, 38,Math.toRadians(90)),Math.toRadians(90))
-                .lineToY(55, new TranslationalVelConstraint(55))
+                .splineToLinearHeading(new Pose2d(-10, 30,Math.toRadians(90)),Math.toRadians(90))
+                .lineToY(55, new TranslationalVelConstraint(25))
                 .setTangent(Math.toRadians(-45))
-                .splineToLinearHeading(new Pose2d(50, 12,Math.toRadians(155)),Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(50, 12,Math.toRadians(155)),
+                        Math.toRadians(-30), new TranslationalVelConstraint(55))
                 .endTrajectory();
 
         TrajectoryActionBuilder redFarThirdPathEnd = redFarThirdPath.fresh()
@@ -186,23 +187,28 @@ public class Automonous extends LinearOpMode {
         TrajectoryActionBuilder blueFarFirstPath = r.drive.actionBuilder(blueStartFar)//firstPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(38, -35,Math.toRadians(270)),Math.toRadians(270))
-                .lineToY(-55)
+                .lineToY(-55, new TranslationalVelConstraint(25))
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(205)),Math.toRadians(205))
+                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(200)),Math.toRadians(205))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarSecondPath = blueFarFirstPath.fresh()//secondPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, -35,Math.toRadians(270)),Math.toRadians(270))
-                .lineToY(-50)
-                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(205)),Math.toRadians(205))
+                .lineToY(-50, new TranslationalVelConstraint(15))
+                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(200)),Math.toRadians(205))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue
                 .splineToLinearHeading(new Pose2d(-10, -38,Math.toRadians(270)),Math.toRadians(270))
-                .lineToY(-53)
-                .splineToLinearHeading(new Pose2d(55, -15,Math.toRadians(205)),Math.toRadians(205))
+                .lineToY(-53, new TranslationalVelConstraint(25))
+                .splineToLinearHeading(new Pose2d(55, -15,Math.toRadians(200)),
+                        Math.toRadians(-40), new TranslationalVelConstraint(55))
                 .endTrajectory();
+        TrajectoryActionBuilder blueFarThirdPathEnd = blueFarThirdPath.fresh()//thirdPathFarBlueEnd
+                .lineToX(35)
+                .endTrajectory();
+
 
         //BLUE NEAR
         TrajectoryActionBuilder blueNearFirstPath = r.drive.actionBuilder(blueStartNear)//firstPathNearBlue
@@ -296,6 +302,7 @@ public class Automonous extends LinearOpMode {
         Action BlueFarMoveToShootingFirstPath = blueFarFirstPath.build();
         Action BlueFarMoveToShootingSecondPath = blueFarSecondPath.build();
         Action BlueFarMoveToShootingThirdPath = blueFarThirdPath.build();
+        Action BlueFarMoveToShootingThirdPathEnd = blueFarThirdPathEnd.build();
         //BLUE NEAR
         Action BlueNearMoveToShootingFirstPath = blueNearFirstPath.build();
         Action BlueNearMoveToShootingSecondPath = blueNearSecondPath.build();
@@ -330,7 +337,7 @@ public class Automonous extends LinearOpMode {
                                 ),
                                 shoot(),
 
-                                new SleepAction(0.15),
+                                new SleepAction(0.2),
                                 new ParallelAction(
                                         RedFarMoveToShootingSecondPath,
                                         intake(MIDDLE_DELAY)
@@ -343,6 +350,7 @@ public class Automonous extends LinearOpMode {
                                         intake(FAR_DELAY)
                               ),
                                shoot(),
+                                  new SleepAction(0.15),
                                   RedFarMoveToShootingThirdPathEnd
 
 
@@ -395,7 +403,7 @@ public class Automonous extends LinearOpMode {
                             new SequentialAction(
                                     BlueFarGoToShootingPosition,
                                     shoot(),
-                                    new SleepAction(1),
+                                    new SleepAction(0.15),
 
                                 new ParallelAction(
                                         BlueFarMoveToShootingFirstPath,
@@ -403,23 +411,23 @@ public class Automonous extends LinearOpMode {
                                 ),
 
                                     shoot(),
-                                    new SleepAction(1),
+                                    new SleepAction(0.15),
 
                                 new ParallelAction(
                                     intake(MIDDLE_DELAY),
                                     BlueFarMoveToShootingSecondPath
                                 ),
-                                new SleepAction(1),
                                 shoot(),
 
-                                new SleepAction(1),
+                                new SleepAction(0.15),
 
                                 new ParallelAction(
                                         intake(FAR_DELAY),
                                         BlueFarMoveToShootingThirdPath
                                 ),
-                                new SleepAction(1),
-                                shoot()
+                                shoot(),
+                                    new SleepAction(0.15),
+                                    BlueFarMoveToShootingThirdPathEnd
                             )
             ));
 

@@ -99,7 +99,7 @@ public class DriverControl extends OpMode {
 
   final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
   final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
-  public static double TURN_GAIN   =  0.0675  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+  public static double TURN_GAIN   =  0.04  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
 
   final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
   final double MAX_AUTO_STRAFE= 0.5;   //  Clip the strafing speed to this max value (adjust for your robot)
@@ -381,6 +381,8 @@ public class DriverControl extends OpMode {
           r.rotator.rightLightGreen();
           shooterState = ShooterState.READY;
           intakeState = IntakeState.FIRING;
+          r.outtake.launcherMotor1OnNear();
+          r.outtake.launcherMotor2OnNear();
         }
 
         break;
@@ -491,7 +493,8 @@ public class DriverControl extends OpMode {
       // drive using manual POV Joystick mode.  Slow things down to make the robot more controlable.
       drive  = -gamepad1.left_stick_y  ;  // Reduce drive rate to 50%.
       strafe = -gamepad1.left_stick_x  ;  // Reduce strafe rate to 50%.
-      turn   = -gamepad1.right_stick_x ;  // Reduce turn rate to 33%.
+      turn   = -gamepad1.right_stick_x ;
+      r.rotator.leftLightRed();// Reduce turn rate to 33%.
       //telemetry.addData("Manual","Drive %5.2f, Strafe %5.2f, Turn %5.2f ", drive, strafe, turn);
     }
 //    telemetry.update();

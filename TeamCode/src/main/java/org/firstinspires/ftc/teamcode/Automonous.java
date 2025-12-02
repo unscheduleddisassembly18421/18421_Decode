@@ -121,7 +121,7 @@ public class Automonous extends LinearOpMode {
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(36, 30,Math.toRadians(90)),
                         Math.toRadians(90))
-                .lineToY(55,  new TranslationalVelConstraint(25))
+                .lineToY(55,  new TranslationalVelConstraint(20))
                 .setTangent(Math.toRadians(270))
                 .splineToLinearHeading(new Pose2d(55, 15,Math.toRadians(158)),Math.toRadians(0))
                 .endTrajectory();
@@ -189,14 +189,14 @@ public class Automonous extends LinearOpMode {
                 .splineToLinearHeading(new Pose2d(38, -35,Math.toRadians(270)),Math.toRadians(270))
                 .lineToY(-55, new TranslationalVelConstraint(25))
                 .setTangent(Math.toRadians(90))
-                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(200)),Math.toRadians(205))
+                .splineToLinearHeading(new Pose2d(55, -12,Math.toRadians(205)),Math.toRadians(0))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarSecondPath = blueFarFirstPath.fresh()//secondPathFarBlue
                 .setTangent(Math.toRadians(180))
                 .splineToLinearHeading(new Pose2d(13, -35,Math.toRadians(270)),Math.toRadians(270))
-                .lineToY(-50, new TranslationalVelConstraint(15))
-                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(200)),Math.toRadians(205))
+                .lineToY(-50, new TranslationalVelConstraint(12))
+                .splineToLinearHeading(new Pose2d(53, -12,Math.toRadians(205)),Math.toRadians(0))
                 .endTrajectory();
 
         TrajectoryActionBuilder blueFarThirdPath = blueFarSecondPath.fresh()//thirdPathFarBlue

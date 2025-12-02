@@ -209,6 +209,16 @@ public class DriverControl extends OpMode {
     if(g2.dpad_left){
       r.rotator.setPosition(thirdAngle);
     }
+    if(g2.a){
+      r.outtake.elavatorMotorON();
+      r.outtake.launcherMotor2OnFar();
+      r.outtake.launcherMotor1OnFar();
+    }
+    if(g2.dpad_down){
+      r.outtake.launcherMotor2Off();
+      r.outtake.launcherMotor1Off();
+      r.outtake.elavatorMotorOff();
+    }
 
 
     switch(shooterState) {
@@ -399,9 +409,6 @@ public class DriverControl extends OpMode {
 
         if(g2.b){
           r.intake.intakeMotorForward();
-        } else if (g2.a) {
-          r.intake.intakeMotorOn();
-
         }
         else{
           r.intake.intakeMotorOff();
